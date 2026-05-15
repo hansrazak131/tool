@@ -23,7 +23,7 @@
       margin: 0 auto;
       min-height: 100vh;
       background: #f4f1fa;
-      padding-bottom: 92px;
+      padding-bottom: 35px;
     }
 
     .topbar {
@@ -428,8 +428,8 @@
 
     .actions {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
       margin-top: 18px;
     }
 
@@ -454,6 +454,11 @@
       color: white;
     }
 
+    .action-btn.compass {
+      background: #ede9fe;
+      color: #7c3aed;
+    }
+
     .tips {
       background: #e6fffb;
       border-radius: 22px;
@@ -473,72 +478,88 @@
       font-size: 15px;
     }
 
-    .bottom-nav {
-      position: fixed;
-      left: 50%;
-      bottom: 0;
-      transform: translateX(-50%);
-      max-width: 480px;
-      width: 100%;
-      background: white;
-      border-top: 1px solid #e5e7eb;
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      padding: 9px 0 8px;
-      z-index: 30;
-      box-shadow: 0 -8px 24px rgba(15,23,42,.08);
-    }
-
-    .nav-item {
-      text-align: center;
-      font-size: 12px;
-      color: #6b7280;
-      font-weight: 700;
-    }
-
-    .nav-item span {
-      display: block;
-      font-size: 22px;
-      margin-bottom: 3px;
-    }
-
-    .nav-item.active {
-      color: #7c3aed;
-    }
-
     .floating {
       position: fixed;
       right: calc(50% - 220px);
-      bottom: 90px;
+      bottom: 28px;
       width: 62px;
       height: 62px;
       border-radius: 50%;
       border: none;
-      background: #f43f5e;
+      background: linear-gradient(135deg,#f43f5e,#fb7185);
       color: white;
       font-size: 28px;
-      box-shadow: 0 12px 28px rgba(244,63,94,.35);
+      box-shadow: 0 14px 32px rgba(244,63,94,.35);
       cursor: pointer;
       z-index: 35;
     }
 
-    @media (max-width: 420px) {
+    @media (min-width: 768px) {
+      .app {
+        max-width: 720px;
+      }
+
+      .topbar {
+        border-radius: 0 0 28px 28px;
+      }
+
+      .content {
+        padding: 24px;
+      }
+
+      .hero {
+        padding: 26px;
+      }
+
+      .floating {
+        right: calc(50% - 330px);
+        bottom: 32px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .app {
+        max-width: 100%;
+      }
+
       .content {
         padding: 14px;
+      }
+
+      .topbar {
+        padding: 18px 16px 20px;
       }
 
       .title-wrap h1 {
         font-size: 22px;
       }
 
+      .title-wrap p {
+        font-size: 13px;
+      }
+
       .hero {
-        padding: 18px;
+        padding: 17px;
+        border-radius: 22px;
       }
 
       .hero-icon {
-        width: 60px;
-        height: 60px;
-        font-size: 30px;
+        width: 58px;
+        height: 58px;
+        font-size: 29px;
+      }
+
+      .hero h2 {
+        font-size: 20px;
+      }
+
+      .card {
+        padding: 17px;
+        border-radius: 22px;
+      }
+
+      .card-title h3 {
+        font-size: 20px;
       }
 
       .info-value {
@@ -549,17 +570,26 @@
         font-size: 17px;
       }
 
-      .floating {
-        right: 18px;
-      }
-
       .const-row {
-        grid-template-columns: 18px 78px 1fr 48px;
+        grid-template-columns: 18px 76px 1fr 46px;
         gap: 8px;
       }
 
       .const-name {
         font-size: 12px;
+      }
+
+      .floating {
+        right: 18px;
+        bottom: 24px;
+        width: 58px;
+        height: 58px;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .actions {
+        grid-template-columns: repeat(2, 1fr);
       }
     }
   </style>
@@ -592,7 +622,7 @@
         <div>
           <span class="badge">GNSS</span>
           <h2>GNSS Planning</h2>
-          <p>Monitoring lokasi, kualitas sinyal, akurasi, skyplot satelit, dan cuaca survey.</p>
+          <p>Monitoring lokasi, kualitas sinyal, akurasi, skyplot satelit, heading, dan cuaca survey.</p>
 
           <p style="font-weight:800;margin-top:10px;">
             <span class="status-dot" id="statusDot"></span>
@@ -643,7 +673,7 @@
 
           <div>
             <div class="info-label">Heading</div>
-            <div class="info-value" id="heading">-</div>
+            <div class="info-value" id="heading">Belum terbaca</div>
           </div>
         </div>
 
@@ -663,9 +693,14 @@
           </div>
         </div>
 
+        <div class="weather-note" style="margin-top:16px;background:#f8fafc;color:#475569;border-color:#e5e7eb;">
+          Heading GPS terbaca saat perangkat bergerak. Tekan tombol Compass untuk membaca arah hadap HP saat diam.
+        </div>
+
         <div class="actions">
           <button class="action-btn" onclick="copyCoordinate()">Copy</button>
           <button class="action-btn dark" onclick="shareCoordinate()">Share</button>
+          <button class="action-btn compass" onclick="enableCompass()">Compass</button>
           <button class="action-btn red" onclick="exportTXT()">Save TXT</button>
         </div>
       </section>
@@ -858,28 +893,6 @@
 
     <button class="floating" onclick="startGPS()">⌖</button>
 
-    <div class="bottom-nav">
-      <div class="nav-item">
-        <span>🗺️</span>
-        Map
-      </div>
-
-      <div class="nav-item active">
-        <span>🛰️</span>
-        GNSS
-      </div>
-
-      <div class="nav-item">
-        <span>📍</span>
-        Point
-      </div>
-
-      <div class="nav-item">
-        <span>⚙️</span>
-        Tools
-      </div>
-    </div>
-
   </div>
 
   <script>
@@ -887,6 +900,8 @@
     let currentSatellites = [];
     let watchId = null;
     let lastWeatherLoad = 0;
+    let compassHeading = null;
+    let compassActive = false;
 
     const satColors = {
       GPS: "#14b8a6",
@@ -966,19 +981,15 @@
       lastPosition = position;
 
       const c = position.coords;
-      const lat = c.latitude;
-      const lon = c.longitude;
       const acc = c.accuracy;
-      const alt = c.altitude;
-      const speed = c.speed;
-      const heading = c.heading;
 
-      document.getElementById("lat").innerText = formatNumber(lat, 6) + "°";
-      document.getElementById("lon").innerText = formatNumber(lon, 6) + "°";
-      document.getElementById("acc").innerText = "±" + formatMeter(acc);
-      document.getElementById("alt").innerText = formatMeter(alt);
-      document.getElementById("speed").innerText = speed ? (speed * 3.6).toFixed(1) + " km/h" : "0.0 km/h";
-      document.getElementById("heading").innerText = heading ? heading.toFixed(1) + "°" : "0.0°";
+      document.getElementById("lat").innerText = formatNumber(c.latitude, 6) + "°";
+      document.getElementById("lon").innerText = formatNumber(c.longitude, 6) + "°";
+      document.getElementById("acc").innerText = "±" + formatMeter(c.accuracy);
+      document.getElementById("alt").innerText = formatMeter(c.altitude);
+      document.getElementById("speed").innerText = c.speed ? (c.speed * 3.6).toFixed(1) + " km/h" : "0.0 km/h";
+
+      updateHeadingDisplay(c.heading);
 
       const now = new Date();
 
@@ -1402,6 +1413,72 @@
       });
     }
 
+    async function enableCompass() {
+      try {
+        if (
+          typeof DeviceOrientationEvent !== "undefined" &&
+          typeof DeviceOrientationEvent.requestPermission === "function"
+        ) {
+          const permission = await DeviceOrientationEvent.requestPermission();
+
+          if (permission !== "granted") {
+            alert("Izin kompas ditolak. Aktifkan izin sensor/orientation pada browser.");
+            return;
+          }
+        }
+
+        window.addEventListener("deviceorientation", handleOrientation, true);
+        window.addEventListener("deviceorientationabsolute", handleOrientation, true);
+
+        compassActive = true;
+
+        alert("Compass aktif. Putar HP perlahan seperti angka 8 agar sensor lebih stabil.");
+      } catch (error) {
+        alert("Compass tidak bisa diaktifkan di browser ini. Coba gunakan Chrome Android.");
+      }
+    }
+
+    function handleOrientation(event) {
+      let heading = null;
+
+      if (typeof event.webkitCompassHeading === "number") {
+        heading = event.webkitCompassHeading;
+      } else if (typeof event.alpha === "number") {
+        heading = 360 - event.alpha;
+      }
+
+      if (heading !== null && !isNaN(heading)) {
+        compassHeading = normalizeDegree(heading);
+        updateHeadingDisplay(lastPosition ? lastPosition.coords.heading : null);
+      }
+    }
+
+    function updateHeadingDisplay(gpsHeading) {
+      const headingEl = document.getElementById("heading");
+
+      if (compassHeading !== null) {
+        headingEl.innerText = compassHeading.toFixed(1) + "° Compass";
+        return;
+      }
+
+      if (gpsHeading !== null && gpsHeading !== undefined && !isNaN(gpsHeading)) {
+        headingEl.innerText = gpsHeading.toFixed(1) + "° GPS";
+        return;
+      }
+
+      headingEl.innerText = "Belum terbaca";
+    }
+
+    function normalizeDegree(value) {
+      value = value % 360;
+
+      if (value < 0) {
+        value += 360;
+      }
+
+      return value;
+    }
+
     function copyCoordinate() {
       if (!lastPosition) {
         alert("GPS belum mendapatkan lokasi.");
@@ -1415,6 +1492,7 @@
         `Longitude: ${c.longitude}\n` +
         `Accuracy: ±${c.accuracy.toFixed(1)} m\n` +
         `Altitude: ${c.altitude ? c.altitude.toFixed(1) : "-"} m\n` +
+        `Heading: ${document.getElementById("heading").innerText}\n` +
         `Datum: WGS84 / EPSG:4326`;
 
       navigator.clipboard.writeText(text);
@@ -1434,6 +1512,7 @@
         `Lat: ${c.latitude}\n` +
         `Lon: ${c.longitude}\n` +
         `Accuracy: ±${c.accuracy.toFixed(1)} m\n` +
+        `Heading: ${document.getElementById("heading").innerText}\n` +
         `Google Maps: https://maps.google.com/?q=${c.latitude},${c.longitude}`;
 
       if (navigator.share) {
@@ -1466,7 +1545,7 @@
       txt += "Accuracy  : ±" + c.accuracy.toFixed(1) + " m\n";
       txt += "Altitude  : " + (c.altitude ? c.altitude.toFixed(1) : "-") + " m\n";
       txt += "Speed     : " + (c.speed ? (c.speed * 3.6).toFixed(1) : "0.0") + " km/h\n";
-      txt += "Heading   : " + (c.heading ? c.heading.toFixed(1) : "0.0") + "°\n\n";
+      txt += "Heading   : " + document.getElementById("heading").innerText + "\n\n";
 
       txt += "SIGNAL QUALITY\n";
       txt += "Fix Status       : " + document.getElementById("fixStatus").innerText + "\n";
