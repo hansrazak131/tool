@@ -3784,14 +3784,9 @@
     function applyReverseAddress(data, lat, lon) {
       photoAddressFull = data.display_name || "";
       const a = data.address || {};
-      const parts = [
-        a.road || a.neighbourhood || a.hamlet || a.village || a.suburb || a.quarter,
-        a.city_district || a.district || a.city || a.town || a.county || a.regency || a.municipality,
-        a.state,
-        a.country
-      ].filter(Boolean);
-      const cleaned = compactAddressParts(parts);
-      photoAddressShort = cleaned.length ? cleaned.join(", ") : coordinateAddressFallback(lat, lon);
+      const locality = a.city_district || a.district || a.suburb || a.village || a.hamlet || a.town || a.city || a.county || a.regency || a.municipality || a.quarter || a.neighbourhood || a.road || "";
+      const province = a.state || a.region || "";
+      photoAddressShort = buildPhotoAddress(locality, province) || coordinateAddressFallback(lat, lon);
       photoAddressLat = lat;
       photoAddressLon = lon;
       const el = document.getElementById("photoModalAddress");
@@ -3803,14 +3798,9 @@
       fetch(url)
         .then(r => r.ok ? r.json() : Promise.reject(new Error("BigDataCloud failed")))
         .then(data => {
-          const parts = [
-            data.locality || data.city || data.principalSubdivision,
-            data.localityInfo && data.localityInfo.administrative && data.localityInfo.administrative[2] ? data.localityInfo.administrative[2].name : "",
-            data.principalSubdivision,
-            data.countryName
-          ].filter(Boolean);
-          const cleaned = compactAddressParts(parts);
-          photoAddressShort = cleaned.length ? cleaned.join(", ") : coordinateAddressFallback(lat, lon);
+          const locality = data.locality || data.city || (data.localityInfo && data.localityInfo.administrative && data.localityInfo.administrative[2] ? data.localityInfo.administrative[2].name : "") || data.principalSubdivision || "";
+          const province = data.principalSubdivision || "";
+          photoAddressShort = buildPhotoAddress(locality, province) || coordinateAddressFallback(lat, lon);
           photoAddressFull = data.locality || photoAddressShort;
           photoAddressLat = lat;
           photoAddressLon = lon;
@@ -3837,11 +3827,16 @@
       return out.slice(0, 4);
     }
 
+    function buildPhotoAddress(locality, province) {
+      const parts = compactAddressParts([locality, province]).filter(Boolean);
+      return parts.join(', ');
+    }
+
     function coordinateAddressFallback(lat, lon) {
       // Lightweight fallback so the stamp never shows a wrong country when the reverse-geocode API fails.
-      if (lat >= -6.35 && lat <= -5.75 && lon >= 106.0 && lon <= 106.55) return "Pontang, Serang, Banten, Indonesia";
-      if (lat >= -7.2 && lat <= -5.6 && lon >= 105.0 && lon <= 107.3) return "Banten, Indonesia";
-      if (lat >= -11.5 && lat <= 6.5 && lon >= 94 && lon <= 142) return "Lokasi GPS, Indonesia";
+      if (lat >= -6.35 && lat <= -5.75 && lon >= 106.0 && lon <= 106.55) return "Pontang, Banten";
+      if (lat >= -7.2 && lat <= -5.6 && lon >= 105.0 && lon <= 107.3) return "Banten";
+      if (lat >= -11.5 && lat <= 6.5 && lon >= 94 && lon <= 142) return "Lokasi GPS";
       return "Lokasi GPS";
     }
 
@@ -4171,14 +4166,14 @@ function createAnnotatedImage(src, label, project, notes, cb) {
         const logoX = W - pad - logoBoxSize;
         const logoY = pad + 6;
 
-        const mapW = Math.min(W * 0.205, 220 * sizeK);
-        const mapH = mapW * 0.76;
+        const mapW = Math.min(W * 0.172, 182 * sizeK);
+        const mapH = mapW * 0.74;
         const mapX = W - pad - mapW;
-        const mapY = H - mapH - pad + (8 * sizeK);
+        const mapY = H - mapH - pad + (4 * sizeK);
 
-        const textLeft = pad + 24 * sizeK;
-        const textRightLimit = mapX - (26 * sizeK);
-        const infoMaxWidth = Math.max(260 * sizeK, Math.min(W * 0.48, textRightLimit - textLeft));
+        const textLeft = pad + 28 * sizeK;
+        const textRightLimit = mapX - (30 * sizeK);
+        const infoMaxWidth = Math.max(248 * sizeK, Math.min(W * 0.44, textRightLimit - textLeft));
 
         const titleFont = Math.max(27, W * 0.037) * sizeK;
         const projectFont = Math.max(18, W * 0.026) * sizeK;
@@ -4215,7 +4210,7 @@ function createAnnotatedImage(src, label, project, notes, cb) {
           font: '900 ' + titleFont + 'px Arial',
           fill: '#ffffff',
           lineHeight: titleFont * 1.04,
-          gapAfter: 8 * sizeK,
+          gapAfter: 10 * sizeK,
           lines: wrapLinesWithFont('900 ' + titleFont + 'px Arial', label || 'Site label', infoMaxWidth, 2)
         });
 
@@ -4224,7 +4219,7 @@ function createAnnotatedImage(src, label, project, notes, cb) {
             font: '800 ' + projectFont + 'px Arial',
             fill: '#fbbf24',
             lineHeight: projectFont * 1.08,
-            gapAfter: 12 * sizeK,
+            gapAfter: 14 * sizeK,
             lines: wrapLinesWithFont('800 ' + projectFont + 'px Arial', project, infoMaxWidth, 1)
           });
         }
@@ -4234,7 +4229,7 @@ function createAnnotatedImage(src, label, project, notes, cb) {
             font: '700 ' + lineFont + 'px Arial',
             fill: '#ffffff',
             lineHeight: lineFont * 1.14,
-            gapAfter: 8 * sizeK,
+            gapAfter: 10 * sizeK,
             lines: [line]
           });
         });
@@ -4244,7 +4239,7 @@ function createAnnotatedImage(src, label, project, notes, cb) {
             font: '700 ' + lineFont + 'px Arial',
             fill: '#ffffff',
             lineHeight: lineFont * 1.13,
-            gapAfter: idx === addressLines.length - 1 ? 12 * sizeK : 4 * sizeK,
+            gapAfter: idx === addressLines.length - 1 ? 14 * sizeK : 5 * sizeK,
             lines: wrapLinesWithFont('700 ' + lineFont + 'px Arial', line, infoMaxWidth, 1)
           });
         });
@@ -4259,32 +4254,59 @@ function createAnnotatedImage(src, label, project, notes, cb) {
             font: '700 ' + lineFont + 'px Arial',
             fill: '#ffffff',
             lineHeight: lineFont * 1.12,
-            gapAfter: idx === arr.length - 1 ? 0 : 6 * sizeK,
+            gapAfter: idx === arr.length - 1 ? 0 : 7 * sizeK,
             lines: wrapLinesWithFont('700 ' + lineFont + 'px Arial', line, infoMaxWidth, 1)
           });
         });
 
         let totalHeight = 0;
+        let maxLineWidth = 0;
         blocks.forEach(block => {
           totalHeight += (block.spacerBefore || 0) + (block.lines.length * block.lineHeight) + (block.gapAfter || 0);
+          ctx.save();
+          ctx.font = block.font;
+          block.lines.forEach(line => {
+            maxLineWidth = Math.max(maxLineWidth, ctx.measureText(line).width);
+          });
+          ctx.restore();
         });
 
-        const minTop = compassCY + compassR + 22 * sizeK;
+        const minTop = compassCY + compassR + 24 * sizeK;
         const startY = Math.max(minTop, H - pad - totalHeight);
+        const infoPanelPadX = 18 * sizeK;
+        const infoPanelPadY = 14 * sizeK;
+        const infoPanelX = Math.max(pad - 4 * sizeK, textLeft - 18 * sizeK);
+        const infoPanelY = startY - infoPanelPadY + 4 * sizeK;
+        const infoPanelW = Math.min(Math.max(maxLineWidth + infoPanelPadX * 2 + 10 * sizeK, 252 * sizeK), mapX - infoPanelX - 20 * sizeK);
+        const infoPanelH = totalHeight + infoPanelPadY * 2 - 2 * sizeK;
 
         function drawInfo() {
           ctx.save();
+          ctx.shadowColor = 'rgba(0,0,0,.24)';
+          ctx.shadowBlur = 18;
+          ctx.shadowOffsetY = 6;
+          ctx.fillStyle = 'rgba(10,10,10,.22)';
+          roundRect(ctx, infoPanelX, infoPanelY, infoPanelW, infoPanelH, 20 * sizeK, true, false);
+          ctx.restore();
+
+          ctx.save();
+          ctx.strokeStyle = 'rgba(255,255,255,.16)';
+          ctx.lineWidth = Math.max(1.2, 1.4 * sizeK);
+          roundRect(ctx, infoPanelX, infoPanelY, infoPanelW, infoPanelH, 20 * sizeK, false, true);
+          ctx.restore();
+
+          ctx.save();
           ctx.textAlign = 'left';
           ctx.textBaseline = 'top';
-          ctx.shadowColor = 'rgba(0,0,0,.78)';
-          ctx.shadowBlur = 10;
+          ctx.shadowColor = 'rgba(0,0,0,.52)';
+          ctx.shadowBlur = 6;
           ctx.shadowOffsetY = 2;
 
-          const accentX = textLeft - 16 * sizeK;
-          const accentY = startY + 2 * sizeK;
-          const accentH = totalHeight;
+          const accentX = infoPanelX + 10 * sizeK;
+          const accentY = infoPanelY + 12 * sizeK;
+          const accentH = totalHeight + 2 * sizeK;
           ctx.fillStyle = '#f2a512';
-          roundRect(ctx, accentX, accentY, Math.max(4, 5 * sizeK), accentH, 4, true, false);
+          roundRect(ctx, accentX, accentY, Math.max(4, 4.5 * sizeK), accentH, 4, true, false);
 
           let y = startY;
           blocks.forEach(block => {
@@ -4302,23 +4324,23 @@ function createAnnotatedImage(src, label, project, notes, cb) {
 
         function drawMapCardFromCanvas(mapCanvas) {
           ctx.save();
-          ctx.shadowColor = 'rgba(0,0,0,.28)';
-          ctx.shadowBlur = 18;
+          ctx.shadowColor = 'rgba(0,0,0,.22)';
+          ctx.shadowBlur = 14;
           ctx.shadowOffsetY = 4;
-          ctx.fillStyle = 'rgba(255,255,255,.96)';
-          roundRect(ctx, mapX, mapY, mapW, mapH, 10, true, false);
+          ctx.fillStyle = 'rgba(255,255,255,.97)';
+          roundRect(ctx, mapX, mapY, mapW, mapH, 11 * sizeK, true, false);
           ctx.restore();
 
-          const inset = 5;
+          const inset = 4;
           ctx.save();
-          roundRect(ctx, mapX + inset, mapY + inset, mapW - inset * 2, mapH - inset * 2, 8, false, false);
+          roundRect(ctx, mapX + inset, mapY + inset, mapW - inset * 2, mapH - inset * 2, 9 * sizeK, false, false);
           ctx.clip();
           ctx.drawImage(mapCanvas, mapX + inset, mapY + inset, mapW - inset * 2, mapH - inset * 2);
           ctx.restore();
 
-          ctx.strokeStyle = 'rgba(255,255,255,.95)';
-          ctx.lineWidth = 2;
-          roundRect(ctx, mapX, mapY, mapW, mapH, 10, false, true);
+          ctx.strokeStyle = 'rgba(255,255,255,.92)';
+          ctx.lineWidth = Math.max(1.4, 1.8 * sizeK);
+          roundRect(ctx, mapX, mapY, mapW, mapH, 11 * sizeK, false, true);
         }
 
         let mapDone = false;
@@ -4531,13 +4553,7 @@ function createAnnotatedImage(src, label, project, notes, cb) {
     function splitAddressLines(text, maxLines) {
       const raw = String(text || '').split(',').map(s => s.trim()).filter(Boolean);
       if (!raw.length) return ['Address not available'];
-      const lines = [];
-      if (raw.length <= maxLines) return raw;
-      const partsPerLine = Math.ceil(raw.length / maxLines);
-      for (let i = 0; i < raw.length; i += partsPerLine) {
-        lines.push(raw.slice(i, i + partsPerLine).join(', '));
-      }
-      return lines.slice(0, maxLines);
+      return [raw.join(', ')];
     }
 
     function drawWrappedText(ctx, text, x, y, maxWidth, lineHeight, maxLines, alignRight) {
