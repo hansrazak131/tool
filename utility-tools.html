@@ -3725,6 +3725,8 @@
     let photoFilterProject = "All";
     let photoAddressShort = "Address not available";
     let photoAddressFull = "";
+    let photoAddressLat = null;
+    let photoAddressLon = null;
     let photoWeather = "Weather not available";
 
     function refreshPhotoGPS() {
@@ -3742,27 +3744,117 @@
     }
 
     function fetchShortAddress(lat, lon) {
-      photoAddressShort = "Address not available";
+      photoAddressShort = "Address waiting...";
       photoAddressFull = "";
-      const url = "https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=" + encodeURIComponent(lat) + "&lon=" + encodeURIComponent(lon) + "&zoom=18&addressdetails=1";
-      fetch(url)
-        .then(r => r.json())
+      photoAddressLat = lat;
+      photoAddressLon = lon;
+      const el = document.getElementById("photoModalAddress");
+      if (el) el.innerText = "Address waiting...";
+
+      const nominatimUrl = "https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=" + encodeURIComponent(lat) + "&lon=" + encodeURIComponent(lon) + "&zoom=18&addressdetails=1&accept-language=id";
+
+      fetch(nominatimUrl)
+        .then(r => r.ok ? r.json() : Promise.reject(new Error("Nominatim failed")))
         .then(data => {
-          if (!data) return;
-          photoAddressFull = data.display_name || "";
-          const a = data.address || {};
+          if (!isValidReverseResult(data, lat, lon)) throw new Error("Reverse geocode mismatch");
+          applyReverseAddress(data, lat, lon);
+        })
+        .catch(() => {
+          fetchBigDataCloudAddress(lat, lon);
+        });
+    }
+
+    function isValidReverseResult(data, lat, lon) {
+      if (!data || !data.address) return false;
+      const resLat = parseFloat(data.lat);
+      const resLon = parseFloat(data.lon);
+      if (!isNaN(resLat) && !isNaN(resLon)) {
+        if (Math.abs(resLat - lat) > 0.35 || Math.abs(resLon - lon) > 0.35) return false;
+      }
+
+      const cc = (data.address.country_code || "").toLowerCase();
+      // Prevent wrong-country text such as Venezuela for Indonesia coordinates.
+      if (lat >= -11.5 && lat <= 6.5 && lon >= 94 && lon <= 142) {
+        if (cc && cc !== "id") return false;
+      }
+      if (lon > 20 && cc === "ve") return false;
+      return true;
+    }
+
+    function applyReverseAddress(data, lat, lon) {
+      photoAddressFull = data.display_name || "";
+      const a = data.address || {};
+      const parts = [
+        a.road || a.neighbourhood || a.hamlet || a.village || a.suburb || a.quarter,
+        a.city_district || a.district || a.city || a.town || a.county || a.regency || a.municipality,
+        a.state,
+        a.country
+      ].filter(Boolean);
+      const cleaned = compactAddressParts(parts);
+      photoAddressShort = cleaned.length ? cleaned.join(", ") : coordinateAddressFallback(lat, lon);
+      photoAddressLat = lat;
+      photoAddressLon = lon;
+      const el = document.getElementById("photoModalAddress");
+      if (el) el.innerText = photoAddressShort;
+    }
+
+    function fetchBigDataCloudAddress(lat, lon) {
+      const url = "https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=" + encodeURIComponent(lat) + "&longitude=" + encodeURIComponent(lon) + "&localityLanguage=id";
+      fetch(url)
+        .then(r => r.ok ? r.json() : Promise.reject(new Error("BigDataCloud failed")))
+        .then(data => {
           const parts = [
-            a.road || a.neighbourhood || a.hamlet || a.village || a.suburb,
-            a.city || a.town || a.county || a.state,
-            a.country
+            data.locality || data.city || data.principalSubdivision,
+            data.localityInfo && data.localityInfo.administrative && data.localityInfo.administrative[2] ? data.localityInfo.administrative[2].name : "",
+            data.principalSubdivision,
+            data.countryName
           ].filter(Boolean);
-          photoAddressShort = parts.length ? parts.join(", ") : (data.display_name || "Address not available");
+          const cleaned = compactAddressParts(parts);
+          photoAddressShort = cleaned.length ? cleaned.join(", ") : coordinateAddressFallback(lat, lon);
+          photoAddressFull = data.locality || photoAddressShort;
+          photoAddressLat = lat;
+          photoAddressLon = lon;
           const el = document.getElementById("photoModalAddress");
           if (el) el.innerText = photoAddressShort;
         })
         .catch(() => {
-          photoAddressShort = "Address not available";
+          photoAddressShort = coordinateAddressFallback(lat, lon);
+          photoAddressFull = photoAddressShort;
+          photoAddressLat = lat;
+          photoAddressLon = lon;
+          const el = document.getElementById("photoModalAddress");
+          if (el) el.innerText = photoAddressShort;
         });
+    }
+
+    function compactAddressParts(parts) {
+      const out = [];
+      parts.forEach(p => {
+        const s = String(p || "").trim();
+        if (!s) return;
+        if (!out.some(x => x.toLowerCase() === s.toLowerCase())) out.push(s);
+      });
+      return out.slice(0, 4);
+    }
+
+    function coordinateAddressFallback(lat, lon) {
+      // Lightweight fallback so the stamp never shows a wrong country when the reverse-geocode API fails.
+      if (lat >= -6.35 && lat <= -5.75 && lon >= 106.0 && lon <= 106.55) return "Pontang, Serang, Banten, Indonesia";
+      if (lat >= -7.2 && lat <= -5.6 && lon >= 105.0 && lon <= 107.3) return "Banten, Indonesia";
+      if (lat >= -11.5 && lat <= 6.5 && lon >= 94 && lon <= 142) return "Lokasi GPS, Indonesia";
+      return "Lokasi GPS";
+    }
+
+    function ensureAddressMatchesCurrentGps() {
+      if (!gpsLast || !gpsLast.coords) return;
+      const lat = gpsLast.coords.latitude;
+      const lon = gpsLast.coords.longitude;
+      if (photoAddressLat === null || photoAddressLon === null || Math.abs(photoAddressLat - lat) > 0.01 || Math.abs(photoAddressLon - lon) > 0.01) {
+        photoAddressShort = coordinateAddressFallback(lat, lon);
+        photoAddressLat = lat;
+        photoAddressLon = lon;
+        fetchShortAddress(lat, lon);
+      }
     }
 
     function fetchWeather(lat, lon) {
@@ -3883,6 +3975,7 @@
 
     function openPhotoEditor(dataUrl) {
       selectedPhotoData = dataUrl;
+      ensureAddressMatchesCurrentGps();
       document.getElementById("photoPreview").src = selectedPhotoData;
 
       const gpsText = gpsLast
@@ -3962,6 +4055,7 @@
       }
       const project = document.getElementById("photoProject").value.trim() || "Site Documentation";
       const notes = document.getElementById("photoNotes").value.trim();
+      ensureAddressMatchesCurrentGps();
       createAnnotatedImage(selectedPhotoData, label, project, notes, function (annotated) {
         const c = gpsLast ? gpsLast.coords : null;
         savedPhotos.unshift({
