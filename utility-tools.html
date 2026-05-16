@@ -4403,8 +4403,8 @@ function createAnnotatedImage(src, label, project, notes, cb) {
       ctx.stroke();
 
       const labels = [['N', 0], ['E', 90], ['S', 180], ['W', 270]];
-      ctx.font = '900 ' + Math.max(12, r * .24) + 'px Arial';
-      ctx.fillStyle = 'rgba(70,70,70,.88)';
+      ctx.font = '800 ' + Math.max(10, r * .19) + 'px Arial';
+      ctx.fillStyle = '#c58a11';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       labels.forEach(([lab, deg]) => {
