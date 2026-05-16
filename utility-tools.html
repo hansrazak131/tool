@@ -2861,6 +2861,8 @@
     let gpsWatchId = null;
     let gpsLast = null;
     let gpsState = "idle";
+    let deviceHeading = null;
+    let deviceOrientationStarted = false;
 
     function setGpsState(state) {
       gpsState = state;
@@ -2897,6 +2899,40 @@
         },
         { enableHighAccuracy: true, maximumAge: 0, timeout: 15000 }
       );
+    }
+
+    function normalizeHeading(deg) {
+      if (deg === null || deg === undefined || isNaN(deg)) return null;
+      return ((deg % 360) + 360) % 360;
+    }
+
+    function handleDeviceHeadingEvent(ev) {
+      let heading = null;
+      if (typeof ev.webkitCompassHeading === "number" && !isNaN(ev.webkitCompassHeading)) {
+        heading = ev.webkitCompassHeading;
+      } else if (typeof ev.alpha === "number" && !isNaN(ev.alpha)) {
+        heading = 360 - ev.alpha;
+      }
+      const normalized = normalizeHeading(heading);
+      if (normalized !== null) deviceHeading = normalized;
+    }
+
+    async function startDeviceHeading(forcePrompt) {
+      if (typeof window === "undefined") return;
+
+      if (window.DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission === "function" && forcePrompt) {
+        try {
+          const state = await DeviceOrientationEvent.requestPermission();
+          if (state !== "granted") return;
+        } catch (e) {
+          return;
+        }
+      }
+
+      if (deviceOrientationStarted) return;
+      window.addEventListener("deviceorientationabsolute", handleDeviceHeadingEvent, true);
+      window.addEventListener("deviceorientation", handleDeviceHeadingEvent, true);
+      deviceOrientationStarted = true;
     }
 
     function showGpsInfo() {
@@ -2978,6 +3014,7 @@
         floating.classList.remove("active");
         document.getElementById("noteAddBtn").classList.remove("active");
         startGlobalGPS();
+        startDeviceHeading();
         setTimeout(function () { drawPhotoDiagram(); loadPhotos(); refreshPhotoGPS(); }, 80);
       }
 
@@ -3866,6 +3903,7 @@
 
 
     function pickPhotoClick() {
+      startDeviceHeading(true);
       refreshPhotoGPS();
       document.getElementById("galleryInput").click();
     }
@@ -3981,6 +4019,7 @@
     }
 
     
+
 function createAnnotatedImage(src, label, project, notes, cb) {
       const img = new Image();
       img.onload = function () {
@@ -3996,28 +4035,25 @@ function createAnnotatedImage(src, label, project, notes, cb) {
         const W = canvas.width;
         const H = canvas.height;
         const opt = getStampOptions();
-        const sizeK = opt.size === "compact" ? 0.88 : opt.size === "large" ? 1.15 : 1;
-        const pad = Math.max(20, W * 0.024);
+        const sizeK = opt.size === "compact" ? 0.9 : opt.size === "large" ? 1.12 : 1;
+        const pad = Math.max(22, W * 0.024);
         const gps = gpsLast ? gpsLast.coords : null;
 
         const lat = gps && gps.latitude != null ? gps.latitude : null;
         const lon = gps && gps.longitude != null ? gps.longitude : null;
         const latText = decimalToCardinal(lat, "lat");
         const lonText = decimalToCardinal(lon, "lon");
-        const headingDeg = gps && gps.heading != null && !isNaN(gps.heading) ? ((gps.heading % 360) + 360) % 360 : 286;
+        const actualHeading = normalizeHeading(deviceHeading != null ? deviceHeading : (gps && gps.heading != null && !isNaN(gps.heading) ? gps.heading : 0));
+        const headingDeg = actualHeading !== null ? actualHeading : 0;
         const headingCard = headingToCardinal(headingDeg);
         const headingText = Math.round(headingDeg) + "° " + headingCard;
-        const speedMps = gps && gps.speed != null && !isNaN(gps.speed) ? gps.speed : 0;
-        const speedKmh = speedMps * 3.6;
-        const speedText = speedKmh.toFixed(1) + " km/h";
         const alt = gps && gps.altitude != null && !isNaN(gps.altitude) ? gps.altitude : null;
         const altitudeText = alt != null ? alt.toFixed(1) + " m" : ((gps && gps.accuracy != null) ? "±" + gps.accuracy.toFixed(1) + " m" : "-");
-        const indexNumber = savedPhotos && savedPhotos.length ? String(savedPhotos.length).padStart(2, "0") : "01";
 
         const addressRaw = photoAddressShort && photoAddressShort !== "Address not available"
           ? photoAddressShort
           : "Address not available";
-        const addressLines = splitAddressLines(addressRaw, 3);
+        const addressLines = splitAddressLines(addressRaw, 4);
 
         const weatherText = photoWeather && photoWeather !== "Weather not available"
           ? formatWeatherForStamp(photoWeather)
@@ -4032,29 +4068,27 @@ function createAnnotatedImage(src, label, project, notes, cb) {
         const timeText = pad2(now.getHours()) + "." + pad2(now.getMinutes()) + "." + pad2(now.getSeconds());
         const dateTimeText = dateText + " " + timeText;
 
-        const compassR = Math.max(48, Math.min(88, W * 0.07)) * sizeK;
-        const compassCX = pad + compassR + 8;
-        const compassCY = pad + compassR + 8;
+        const compassR = Math.max(46, Math.min(86, W * 0.07)) * sizeK;
+        const compassCX = pad + compassR + 10;
+        const compassCY = pad + compassR + 10;
         drawCompassRose(ctx, compassCX, compassCY, compassR, headingDeg);
 
-        const logoBoxSize = Math.max(56, Math.min(98, W * 0.078)) * sizeK;
+        const logoBoxSize = Math.max(68, Math.min(118, W * 0.092)) * sizeK;
         const logoX = W - pad - logoBoxSize;
-        const logoY = pad + 8;
+        const logoY = pad + 6;
 
-        const mapW = Math.min(W * 0.25, 275 * sizeK);
-        const mapH = mapW * 0.80;
+        const mapW = Math.min(W * 0.205, 220 * sizeK);
+        const mapH = mapW * 0.76;
         const mapX = W - pad - mapW;
-        const mapY = H - mapH - pad;
-        drawLargeMapCard(ctx, mapX, mapY, mapW, mapH, opt.mapStyle);
+        const mapY = H - mapH - pad + (8 * sizeK);
 
-        const textLeft = pad + 20 * sizeK;
-        const textRightLimit = mapX - (28 * sizeK);
-        const infoMaxWidth = Math.max(250 * sizeK, Math.min(W * 0.46, textRightLimit - textLeft));
+        const textLeft = pad + 24 * sizeK;
+        const textRightLimit = mapX - (26 * sizeK);
+        const infoMaxWidth = Math.max(260 * sizeK, Math.min(W * 0.48, textRightLimit - textLeft));
 
-        const titleFont = Math.max(26, W * 0.036) * sizeK;
-        const projectFont = Math.max(18, W * 0.025) * sizeK;
+        const titleFont = Math.max(27, W * 0.037) * sizeK;
+        const projectFont = Math.max(18, W * 0.026) * sizeK;
         const lineFont = Math.max(15, W * 0.0215) * sizeK;
-        const smallFont = Math.max(14, W * 0.0185) * sizeK;
 
         function wrapLinesWithFont(fontSpec, text, maxWidth, maxLines) {
           ctx.save();
@@ -4087,7 +4121,7 @@ function createAnnotatedImage(src, label, project, notes, cb) {
           font: '900 ' + titleFont + 'px Arial',
           fill: '#ffffff',
           lineHeight: titleFont * 1.04,
-          gapAfter: 10 * sizeK,
+          gapAfter: 8 * sizeK,
           lines: wrapLinesWithFont('900 ' + titleFont + 'px Arial', label || 'Site label', infoMaxWidth, 2)
         });
 
@@ -4101,20 +4135,22 @@ function createAnnotatedImage(src, label, project, notes, cb) {
           });
         }
 
-        blocks.push({
-          font: '700 ' + lineFont + 'px Arial',
-          fill: '#ffffff',
-          lineHeight: lineFont * 1.14,
-          gapAfter: 8 * sizeK,
-          lines: [dateTimeText]
+        [dateTimeText].forEach((line) => {
+          blocks.push({
+            font: '700 ' + lineFont + 'px Arial',
+            fill: '#ffffff',
+            lineHeight: lineFont * 1.14,
+            gapAfter: 8 * sizeK,
+            lines: [line]
+          });
         });
 
         addressLines.forEach((line, idx) => {
           blocks.push({
             font: '700 ' + lineFont + 'px Arial',
             fill: '#ffffff',
-            lineHeight: lineFont * 1.14,
-            gapAfter: idx === addressLines.length - 1 ? 10 * sizeK : 4 * sizeK,
+            lineHeight: lineFont * 1.13,
+            gapAfter: idx === addressLines.length - 1 ? 12 * sizeK : 4 * sizeK,
             lines: wrapLinesWithFont('700 ' + lineFont + 'px Arial', line, infoMaxWidth, 1)
           });
         });
@@ -4123,36 +4159,23 @@ function createAnnotatedImage(src, label, project, notes, cb) {
           'Cuaca: ' + weatherText,
           latText + ', ' + lonText,
           'Altitude: ' + altitudeText,
-          'Arah: ' + headingText,
-          'Kecepatan: ' + speedText,
-          'Index number: ' + indexNumber
+          'Arah: ' + headingText
         ].forEach((line, idx, arr) => {
           blocks.push({
             font: '700 ' + lineFont + 'px Arial',
-            fill: idx === 0 ? '#f8fafc' : 'rgba(255,255,255,.96)',
+            fill: '#ffffff',
             lineHeight: lineFont * 1.12,
             gapAfter: idx === arr.length - 1 ? 0 : 6 * sizeK,
             lines: wrapLinesWithFont('700 ' + lineFont + 'px Arial', line, infoMaxWidth, 1)
           });
         });
 
-        if (notes) {
-          blocks.push({
-            font: '600 ' + smallFont + 'px Arial',
-            fill: 'rgba(255,255,255,.92)',
-            lineHeight: smallFont * 1.18,
-            gapAfter: 0,
-            lines: wrapLinesWithFont('600 ' + smallFont + 'px Arial', 'Notes: ' + notes, infoMaxWidth, 3),
-            spacerBefore: 14 * sizeK
-          });
-        }
-
         let totalHeight = 0;
         blocks.forEach(block => {
           totalHeight += (block.spacerBefore || 0) + (block.lines.length * block.lineHeight) + (block.gapAfter || 0);
         });
 
-        const minTop = compassCY + compassR + 26 * sizeK;
+        const minTop = compassCY + compassR + 22 * sizeK;
         const startY = Math.max(minTop, H - pad - totalHeight);
 
         function drawInfo() {
@@ -4163,11 +4186,11 @@ function createAnnotatedImage(src, label, project, notes, cb) {
           ctx.shadowBlur = 10;
           ctx.shadowOffsetY = 2;
 
-          const accentX = textLeft - 18 * sizeK;
+          const accentX = textLeft - 16 * sizeK;
           const accentY = startY + 2 * sizeK;
-          const accentH = totalHeight - (notes ? 0 : 6 * sizeK);
+          const accentH = totalHeight;
           ctx.fillStyle = '#f2a512';
-          roundRect(ctx, accentX, accentY, Math.max(5, 6 * sizeK), accentH, 4, true, false);
+          roundRect(ctx, accentX, accentY, Math.max(4, 5 * sizeK), accentH, 4, true, false);
 
           let y = startY;
           blocks.forEach(block => {
@@ -4180,14 +4203,52 @@ function createAnnotatedImage(src, label, project, notes, cb) {
             });
             y += block.gapAfter || 0;
           });
-
           ctx.restore();
         }
 
-        function finalize() {
-          drawWatermark(ctx, W, pad, (document.getElementById('stampBrandText') ? document.getElementById('stampBrandText').value.trim() : 'TimeMark') || 'TimeMark');
+        function drawMapCardFromCanvas(mapCanvas) {
+          ctx.save();
+          ctx.shadowColor = 'rgba(0,0,0,.28)';
+          ctx.shadowBlur = 18;
+          ctx.shadowOffsetY = 4;
+          ctx.fillStyle = 'rgba(255,255,255,.96)';
+          roundRect(ctx, mapX, mapY, mapW, mapH, 10, true, false);
+          ctx.restore();
+
+          const inset = 5;
+          ctx.save();
+          roundRect(ctx, mapX + inset, mapY + inset, mapW - inset * 2, mapH - inset * 2, 8, false, false);
+          ctx.clip();
+          ctx.drawImage(mapCanvas, mapX + inset, mapY + inset, mapW - inset * 2, mapH - inset * 2);
+          ctx.restore();
+
+          ctx.strokeStyle = 'rgba(255,255,255,.95)';
+          ctx.lineWidth = 2;
+          roundRect(ctx, mapX, mapY, mapW, mapH, 10, false, true);
+        }
+
+        let mapDone = false;
+        let logoDone = false;
+
+        function maybeFinish() {
+          if (!mapDone || !logoDone) return;
           drawInfo();
           cb(canvas.toDataURL('image/jpeg', .94));
+        }
+
+        if (lat != null && lon != null) {
+          createActualMapCanvas(lat, lon, mapW, mapH, headingDeg, function (mapCanvas) {
+            if (mapCanvas) {
+              drawMapCardFromCanvas(mapCanvas);
+            } else {
+              drawLargeMapCard(ctx, mapX, mapY, mapW, mapH, opt.mapStyle);
+            }
+            mapDone = true;
+            maybeFinish();
+          });
+        } else {
+          drawLargeMapCard(ctx, mapX, mapY, mapW, mapH, opt.mapStyle);
+          mapDone = true;
         }
 
         if (photoLogoData) {
@@ -4196,42 +4257,154 @@ function createAnnotatedImage(src, label, project, notes, cb) {
             ctx.save();
             ctx.shadowColor = 'rgba(0,0,0,.24)';
             ctx.shadowBlur = 12;
-            ctx.fillStyle = 'rgba(255,255,255,.92)';
-            roundRect(ctx, logoX - 7, logoY - 7, logoBoxSize + 14, logoBoxSize + 14, 14, true, false);
+            ctx.fillStyle = 'rgba(255,255,255,.90)';
+            roundRect(ctx, logoX - 6, logoY - 6, logoBoxSize + 12, logoBoxSize + 12, 16, true, false);
             ctx.drawImage(logo, logoX, logoY, logoBoxSize, logoBoxSize);
             ctx.restore();
-            finalize();
+            logoDone = true;
+            maybeFinish();
           };
-          logo.onerror = finalize;
+          logo.onerror = function () {
+            logoDone = true;
+            maybeFinish();
+          };
           logo.src = photoLogoData;
         } else {
-          finalize();
+          logoDone = true;
         }
+
+        maybeFinish();
       };
       img.src = src;
     }
 
+    function createActualMapCanvas(lat, lon, targetW, targetH, headingDeg, callback) {
+      if (lat == null || lon == null) {
+        callback(null);
+        return;
+      }
+
+      const zoom = 17;
+      const tileSize = 256;
+      const scale = 2;
+      const w = Math.max(120, Math.round(targetW * scale));
+      const h = Math.max(90, Math.round(targetH * scale));
+      const canvas = document.createElement('canvas');
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#eef6f0';
+      ctx.fillRect(0, 0, w, h);
+
+      function lonToTileX(lonValue, z) {
+        return ((lonValue + 180) / 360) * Math.pow(2, z);
+      }
+
+      function latToTileY(latValue, z) {
+        const latRad = latValue * Math.PI / 180;
+        return ((1 - Math.log(Math.tan(latRad) + 1 / Math.cos(latRad)) / Math.PI) / 2) * Math.pow(2, z);
+      }
+
+      const n = Math.pow(2, zoom);
+      const centerTileX = lonToTileX(lon, zoom);
+      const centerTileY = latToTileY(lat, zoom);
+      const centerPxX = centerTileX * tileSize;
+      const centerPxY = centerTileY * tileSize;
+      const topLeftPxX = centerPxX - (w / 2);
+      const topLeftPxY = centerPxY - (h / 2);
+      const startTileX = Math.floor(topLeftPxX / tileSize);
+      const endTileX = Math.floor((topLeftPxX + w) / tileSize);
+      const startTileY = Math.floor(topLeftPxY / tileSize);
+      const endTileY = Math.floor((topLeftPxY + h) / tileSize);
+
+      let pending = 0;
+      let drawnTiles = 0;
+
+      function finish() {
+        if (drawnTiles === 0) {
+          callback(null);
+          return;
+        }
+
+        const markerX = w / 2;
+        const markerY = h / 2;
+
+        ctx.save();
+        ctx.globalAlpha = 0.20;
+        ctx.fillStyle = '#22c55e';
+        ctx.translate(markerX, markerY);
+        ctx.rotate((headingDeg || 0) * Math.PI / 180);
+        ctx.beginPath();
+        ctx.moveTo(0, -14);
+        ctx.lineTo(18, 34);
+        ctx.lineTo(-18, 34);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+
+        ctx.save();
+        ctx.shadowColor = 'rgba(0,0,0,.22)';
+        ctx.shadowBlur = 8;
+        ctx.fillStyle = '#1e90ff';
+        ctx.beginPath();
+        ctx.arc(markerX, markerY, 14, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(markerX, markerY, 6, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+
+        callback(canvas);
+      }
+
+      for (let tx = startTileX; tx <= endTileX; tx++) {
+        for (let ty = startTileY; ty <= endTileY; ty++) {
+          if (ty < 0 || ty >= n) continue;
+          pending++;
+          const wrappedX = ((tx % n) + n) % n;
+          const url = 'https://tile.openstreetmap.org/' + zoom + '/' + wrappedX + '/' + ty + '.png';
+          const img = new Image();
+          img.crossOrigin = 'anonymous';
+          img.onload = function () {
+            const dx = Math.round(tx * tileSize - topLeftPxX);
+            const dy = Math.round(ty * tileSize - topLeftPxY);
+            ctx.drawImage(img, dx, dy, tileSize, tileSize);
+            drawnTiles++;
+            pending--;
+            if (pending === 0) finish();
+          };
+          img.onerror = function () {
+            pending--;
+            if (pending === 0) finish();
+          };
+          img.src = url;
+        }
+      }
+
+      if (pending === 0) callback(null);
+    }
+
     function drawCompassRose(ctx, cx, cy, r, headingDeg) {
       ctx.save();
-      ctx.shadowColor = 'rgba(0,0,0,.20)';
-      ctx.shadowBlur = 14;
-      ctx.fillStyle = 'rgba(255,255,255,.82)';
-      ctx.beginPath();
-      ctx.arc(cx, cy, r, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.shadowBlur = 0;
+      ctx.shadowColor = 'rgba(0,0,0,.14)';
+      ctx.shadowBlur = 8;
 
-      ctx.strokeStyle = 'rgba(90,90,90,.78)';
-      ctx.lineWidth = Math.max(9, r * .20);
+      ctx.strokeStyle = 'rgba(90,90,90,.58)';
+      ctx.lineWidth = Math.max(8, r * .17);
       ctx.beginPath();
-      ctx.arc(cx, cy, r - ctx.lineWidth/2, 0, Math.PI * 2);
+      ctx.arc(cx, cy, r - ctx.lineWidth / 2, 0, Math.PI * 2);
       ctx.stroke();
 
-      const labels = [
-        ['N', 0], ['E', 90], ['S', 180], ['W', 270]
-      ];
-      ctx.font = '900 ' + Math.max(12, r * .25) + 'px Arial';
-      ctx.fillStyle = 'rgba(70,70,70,.92)';
+      ctx.strokeStyle = 'rgba(255,255,255,.28)';
+      ctx.lineWidth = Math.max(1.5, r * .025);
+      ctx.beginPath();
+      ctx.arc(cx, cy, r * .70, 0, Math.PI * 2);
+      ctx.stroke();
+
+      const labels = [['N', 0], ['E', 90], ['S', 180], ['W', 270]];
+      ctx.font = '900 ' + Math.max(12, r * .24) + 'px Arial';
+      ctx.fillStyle = 'rgba(70,70,70,.88)';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       labels.forEach(([lab, deg]) => {
@@ -4241,17 +4414,18 @@ function createAnnotatedImage(src, label, project, notes, cb) {
         ctx.fillText(lab, lx, ly);
       });
 
-      // Needle
       ctx.save();
       ctx.translate(cx, cy);
-      ctx.rotate((headingDeg - 0) * Math.PI / 180);
+      ctx.rotate((headingDeg || 0) * Math.PI / 180);
       ctx.beginPath();
-      ctx.moveTo(0, -r * .70);
-      ctx.lineTo(r * .12, r * .40);
-      ctx.lineTo(-r * .12, r * .40);
+      ctx.moveTo(0, -r * .68);
+      ctx.lineTo(r * .12, r * .34);
+      ctx.lineTo(-r * .12, r * .34);
       ctx.closePath();
       ctx.fillStyle = '#18b8d8';
       ctx.fill();
+      ctx.restore();
+
       ctx.restore();
     }
 
@@ -5221,6 +5395,8 @@ function createAnnotatedImage(src, label, project, notes, cb) {
 
     window.onload = function () {
       setNow();
+      startGlobalGPS();
+      startDeviceHeading();
       openPage("menu");
     };
   </script>
