@@ -2775,15 +2775,23 @@
             </div>
           </div>
           <div class="premium-preview-card">
-            <div class="preview-stamp" id="stampPreviewBox">
-              <div class="preview-map"></div>
-              <div class="preview-text">
-                <div class="preview-time-badge">10:57 <span class="ok-dot">✓</span></div>
-                <b>Projects mill</b>
-                <span>Jum, 10/10/2025</span>
-                <span>Marga Mulya, Kec. Semangga</span>
-                <span>Berawan 32°C • 8.404950°S, 140.472483°E</span>
-              </div>
+            <div style="position:absolute;left:14px;top:12px;width:64px;height:64px;border-radius:50%;border:8px solid rgba(255,255,255,.55);box-sizing:border-box;opacity:.88;display:grid;place-items:center;color:#fff;font-weight:900;font-size:11px;">
+              <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);">N</div>
+              <div style="position:absolute;right:-10px;top:50%;transform:translateY(-50%);">E</div>
+              <div style="position:absolute;bottom:-12px;left:50%;transform:translateX(-50%);">S</div>
+              <div style="position:absolute;left:-10px;top:50%;transform:translateY(-50%);">W</div>
+              <div style="width:0;height:0;border-left:9px solid transparent;border-right:9px solid transparent;border-bottom:30px solid #19c2df;transform:translateY(-6px);"></div>
+            </div>
+            <div class="preview-stamp" id="stampPreviewBox" style="position:absolute;left:16px;bottom:16px;width:126px;grid-template-columns:1fr;padding:0;background:rgba(255,255,255,.18);border:none;backdrop-filter:none;">
+              <div class="preview-map" style="width:126px;height:100px;border-radius:8px"></div>
+            </div>
+            <div style="position:absolute;right:18px;bottom:18px;text-align:right;color:#fff;max-width:48%;text-shadow:0 2px 6px rgba(0,0,0,.75);">
+              <div class="preview-time-badge" style="margin-left:auto;background:rgba(39,16,10,.78);">10:57 <span class="ok-dot">✓</span></div>
+              <div style="font-size:24px;font-weight:900;line-height:1.08;margin-top:8px;">Projects mill</div>
+              <div style="font-size:14px;line-height:1.25;margin-top:8px;">Jum, 10/10/2025</div>
+              <div style="font-size:14px;line-height:1.22;margin-top:6px;">Marga Mulya, Kec. Semangga, Papua</div>
+              <div style="font-size:14px;line-height:1.22;margin-top:6px;">Berawan 32°C</div>
+              <div style="font-size:14px;line-height:1.22;margin-top:6px;">8.404950°S, 140.472483°E</div>
             </div>
           </div>
         </div>
@@ -2794,7 +2802,7 @@
         </div>
 
         <div class="timestamp-note">
-          Output premium dibuat seperti GPS Camera / Timemark: peta besar di kiri atas, logo kecil di kanan atas, time badge, label besar, alamat, cuaca, koordinat, elevasi, dan arah. Background transparan agar foto tetap terlihat profesional.
+          Output premium kini memakai template yang lebih lengkap: kompas arah mata angin di atas foto, peta kecil, badge waktu/project, logo kecil, cuaca, heading, koordinat, alamat singkat, elevasi, kecepatan, dan nomor indeks. Teks dibuat vertikal/tinggi agar mirip aplikasi GPS camera lapangan.
         </div>
 
         <div class="modal-actions sticky-actions">
@@ -3979,196 +3987,291 @@
         const W = canvas.width;
         const H = canvas.height;
         const opt = getStampOptions();
-
-        const sizeK = opt.size === "compact" ? 0.86 : opt.size === "large" ? 1.18 : 1;
-        const pad = Math.max(22, W * 0.026);
-        const accent = opt.theme === "construction" ? "#f59e0b" : "#f59e0b";
-        const textWhite = "#ffffff";
-        const textSoft = "rgba(255,255,255,.88)";
-        const shadow = "rgba(0,0,0,.62)";
-
+        const sizeK = opt.size === "compact" ? 0.88 : opt.size === "large" ? 1.15 : 1;
+        const pad = Math.max(20, W * 0.024);
         const gps = gpsLast ? gpsLast.coords : null;
-        const latText = gps ? decimalToCardinal(gps.latitude, "lat") : "-";
-        const lonText = gps ? decimalToCardinal(gps.longitude, "lon") : "-";
-        const accText = gps ? "±" + (gps.accuracy || 0).toFixed(1) + " m" : "";
-        const altText = gps && gps.altitude !== null && gps.altitude !== undefined
-          ? gps.altitude.toFixed(1).replace(".", ",") + " m"
-          : accText || "-";
-        const headingText = gps && gps.heading !== null && gps.heading !== undefined
-          ? Math.round(gps.heading) + "°"
-          : "204°SW";
 
-        const now = new Date();
-        const timeText = pad2(now.getHours()) + ":" + pad2(now.getMinutes());
-        const dateText = now.toLocaleDateString("id-ID", {
-          weekday: "short",
-          day: "2-digit",
-          month: "2-digit",
-          year: "numeric"
-        }).replace(/\./g, "");
+        const lat = gps && gps.latitude != null ? gps.latitude : null;
+        const lon = gps && gps.longitude != null ? gps.longitude : null;
+        const latText = decimalToCardinal(lat, "lat");
+        const lonText = decimalToCardinal(lon, "lon");
+        const headingDeg = gps && gps.heading != null && !isNaN(gps.heading) ? ((gps.heading % 360) + 360) % 360 : 286;
+        const headingCard = headingToCardinal(headingDeg);
+        const headingText = Math.round(headingDeg) + "° " + headingCard;
+        const speedMps = gps && gps.speed != null && !isNaN(gps.speed) ? gps.speed : 0;
+        const speedKmh = (speedMps * 3.6);
+        const speedText = speedKmh.toFixed(1) + " km/h";
+        const alt = gps && gps.altitude != null && !isNaN(gps.altitude) ? gps.altitude : null;
+        const altitudeText = alt != null ? alt.toFixed(1) + " m" : ((gps && gps.accuracy != null) ? "±" + gps.accuracy.toFixed(1) + " m" : "-");
+        const accuracyText = gps && gps.accuracy != null ? "±" + gps.accuracy.toFixed(1) + " m" : "-";
+        const indexNumber = savedPhotos && savedPhotos.length ? String(savedPhotos.length).padStart(2, "0") : "01";
+
+        const addressRaw = photoAddressShort && photoAddressShort !== "Address not available"
+          ? photoAddressShort
+          : "Address not available";
+        const addressLines = splitAddressLines(addressRaw, 3);
 
         const weatherText = photoWeather && photoWeather !== "Weather not available"
           ? formatWeatherForStamp(photoWeather)
           : "Weather not available";
 
-        const address = photoAddressShort && photoAddressShort !== "Address not available"
-          ? photoAddressShort
-          : "Address not available";
+        const now = new Date();
+        const dateText = now.toLocaleDateString("id-ID", {
+          day: "2-digit",
+          month: "long",
+          year: "numeric"
+        });
+        const timeText = pad2(now.getHours()) + "." + pad2(now.getMinutes()) + "." + pad2(now.getSeconds());
+        const dateTimeText = dateText + " " + timeText;
 
-        // Top-left large map card, similar to GPS camera apps.
-        const mapW = Math.min(W * 0.31, 360 * sizeK);
-        const mapH = mapW * 0.78;
+        // 1) Compass overlay top-left
+        const compassR = Math.max(48, Math.min(88, W * 0.07)) * sizeK;
+        const compassCX = pad + compassR + 8;
+        const compassCY = pad + compassR + 8;
+        drawCompassRose(ctx, compassCX, compassCY, compassR, headingDeg);
+
+        // 2) Map overlay bottom-left
+        const mapW = Math.min(W * 0.24, 265 * sizeK);
+        const mapH = mapW * 0.80;
         const mapX = pad;
-        const mapY = pad;
+        const mapY = H - mapH - pad;
         drawLargeMapCard(ctx, mapX, mapY, mapW, mapH, opt.mapStyle);
 
-        // Top-right brand / watermark
-        drawWatermark(ctx, W, pad, opt.brandText || "TimeMark");
+        // 3) Brand logo small on upper-right if provided
+        const logoBoxSize = Math.max(48, Math.min(82, W * 0.065)) * sizeK;
+        const logoX = W - pad - logoBoxSize;
+        const logoY = pad + 10;
 
-        // Small logo on top-right under watermark
-        function drawLogo(next) {
-          if (!photoLogoData) { next(); return; }
-          const logo = new Image();
-          logo.onload = function () {
-            const logoSize = Math.max(44, Math.min(82, W * 0.06)) * (opt.size === "compact" ? .9 : 1);
-            const lx = W - pad - logoSize;
-            const ly = pad + Math.max(42, W * 0.035);
-            ctx.save();
-            ctx.shadowColor = "rgba(0,0,0,.34)";
-            ctx.shadowBlur = 12;
-            ctx.fillStyle = "rgba(255,255,255,.86)";
-            roundRect(ctx, lx - 5, ly - 5, logoSize + 10, logoSize + 10, 12, true, false);
-            ctx.drawImage(logo, lx, ly, logoSize, logoSize);
-            ctx.restore();
-            next();
-          };
-          logo.onerror = next;
-          logo.src = photoLogoData;
-        }
+        const infoSide = (opt.position || 'bottom-right').includes('left') ? 'left' : 'right';
+        const alignRight = infoSide === 'right';
+        const textRight = W - pad;
+        const textLeft = pad;
+        const infoX = alignRight ? textRight : textLeft;
+        const infoMaxWidth = Math.min(W * 0.42, 520 * sizeK);
 
-        function drawStamp() {
-          const baseFont = Math.max(22, W * 0.035) * sizeK;
-          const bodyFont = Math.max(17, W * 0.022) * sizeK;
-          const smallFont = Math.max(14, W * 0.018) * sizeK;
-          const labelFont = Math.max(24, W * 0.04) * sizeK;
+        const titleFont = Math.max(24, W * 0.034) * sizeK;
+        const lineFont = Math.max(18, W * 0.024) * sizeK;
+        const smallFont = Math.max(16, W * 0.019) * sizeK;
+        const badgeFont = Math.max(18, W * 0.021) * sizeK;
+        const projectFont = Math.max(19, W * 0.022) * sizeK;
 
-          // Text block sizing based on reference image: large readable left-bottom.
-          const blockW = Math.min(W - pad * 2, Math.max(W * 0.66, 560 * sizeK));
-          let blockH = Math.min(H * 0.46, Math.max(330 * sizeK, bodyFont * 9.5));
-          const blockX = opt.position.includes("right") ? W - blockW - pad : pad;
-          const blockY = opt.position.includes("top") ? mapY + mapH + pad * 0.8 : H - blockH - pad;
-
-          // Time/project badge
-          const badgeH = Math.max(56, 72 * sizeK);
-          const badgeW = Math.min(blockW * 0.72, Math.max(330 * sizeK, 420 * sizeK));
-          const badgeX = blockX + 24 * sizeK;
-          const badgeY = blockY - badgeH - 14 * sizeK;
-
+        function drawInfo() {
           ctx.save();
-          ctx.shadowColor = "rgba(0,0,0,.36)";
-          ctx.shadowBlur = 16;
-          ctx.shadowOffsetY = 5;
-          ctx.fillStyle = "rgba(38, 13, 8, " + Math.max(0.40, Math.min(0.88, opt.opacity)) + ")";
-          roundRect(ctx, badgeX, badgeY, badgeW, badgeH, 12 * sizeK, true, false);
-          ctx.restore();
-
-          // optional small logo/icon box in badge
-          const iconBox = badgeH - 18 * sizeK;
-          ctx.fillStyle = "rgba(255,255,255,.92)";
-          roundRect(ctx, badgeX + 10 * sizeK, badgeY + 9 * sizeK, iconBox, iconBox, 9 * sizeK, true, false);
-          drawMiniLandscapeIcon(ctx, badgeX + 10 * sizeK, badgeY + 9 * sizeK, iconBox);
-
-          ctx.fillStyle = textWhite;
-          ctx.font = "900 " + (baseFont * 1.12) + "px Arial";
-          ctx.shadowColor = shadow;
-          ctx.shadowBlur = 4;
-          ctx.fillText(timeText, badgeX + iconBox + 26 * sizeK, badgeY + badgeH * 0.68);
-
-          // check circle
-          const checkR = badgeH * 0.28;
-          const checkX = badgeX + badgeW - checkR - 16 * sizeK;
-          const checkY = badgeY + badgeH / 2;
-          ctx.shadowBlur = 0;
-          ctx.fillStyle = "#f59e0b";
-          ctx.beginPath();
-          ctx.arc(checkX, checkY, checkR, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.strokeStyle = "rgba(255,255,255,.16)";
-          ctx.lineWidth = 2;
-          ctx.stroke();
-          ctx.strokeStyle = "#3a1d00";
-          ctx.lineWidth = Math.max(4, 5 * sizeK);
-          ctx.beginPath();
-          ctx.moveTo(checkX - checkR * .38, checkY);
-          ctx.lineTo(checkX - checkR * .10, checkY + checkR * .27);
-          ctx.lineTo(checkX + checkR * .42, checkY - checkR * .35);
-          ctx.stroke();
-
-          // Left vertical accent line
-          ctx.shadowColor = "rgba(0,0,0,.35)";
-          ctx.shadowBlur = 8;
-          ctx.fillStyle = accent;
-          roundRect(ctx, blockX, blockY, Math.max(8, 10 * sizeK), blockH, 2, true, false);
-          ctx.shadowBlur = 0;
-
-          // Main text with strong shadow, no big boxed background (clean like reference)
-          let y = blockY + 42 * sizeK;
-          const textX = blockX + 34 * sizeK;
-          const maxTextW = blockW - 42 * sizeK;
-
-          ctx.shadowColor = "rgba(0,0,0,.85)";
+          ctx.textAlign = alignRight ? 'right' : 'left';
+          ctx.fillStyle = '#ffffff';
+          ctx.shadowColor = 'rgba(0,0,0,.88)';
           ctx.shadowBlur = 8;
           ctx.shadowOffsetY = 2;
 
-          ctx.fillStyle = textWhite;
-          ctx.font = "900 " + labelFont + "px Arial";
-          wrapCanvasText(ctx, label || "Site label", textX, y, maxTextW, labelFont * 1.08, 2);
-          y += labelFont * 1.55;
+          // Project/time badge above paragraph, inspired by reference but cleaner.
+          const badgeH = Math.max(58, 68 * sizeK);
+          const badgeW = Math.min(infoMaxWidth, Math.max(330 * sizeK, W * 0.26));
+          const badgeX = alignRight ? infoX - badgeW : infoX;
+          const badgeY = H - pad - (smallFont * 8.8) - badgeH - 30 * sizeK;
 
-          ctx.font = "700 " + bodyFont + "px Arial";
-          ctx.fillStyle = textSoft;
-          wrapCanvasText(ctx, dateText, textX, y, maxTextW, bodyFont * 1.18, 1);
-          y += bodyFont * 1.45;
+          ctx.shadowBlur = 16;
+          ctx.shadowColor = 'rgba(0,0,0,.28)';
+          ctx.fillStyle = 'rgba(59, 26, 13, ' + Math.max(0.54, Math.min(0.86, opt.opacity)) + ')';
+          roundRect(ctx, badgeX, badgeY, badgeW, badgeH, 14 * sizeK, true, false);
+          ctx.shadowBlur = 0;
 
-          ctx.font = "700 " + bodyFont + "px Arial";
-          wrapCanvasText(ctx, address, textX, y, maxTextW, bodyFont * 1.18, 2);
-          y += bodyFont * 2.35;
+          const iconSize = badgeH - 18 * sizeK;
+          const iconX = badgeX + 10 * sizeK;
+          const iconY = badgeY + 9 * sizeK;
+          ctx.fillStyle = 'rgba(255,255,255,.95)';
+          roundRect(ctx, iconX, iconY, iconSize, iconSize, 10 * sizeK, true, false);
+          drawMiniLandscapeIcon(ctx, iconX, iconY, iconSize);
 
-          ctx.font = "800 " + bodyFont + "px Arial";
-          ctx.fillStyle = textWhite;
-          wrapCanvasText(ctx, weatherText, textX, y, maxTextW, bodyFont * 1.18, 1);
-          y += bodyFont * 1.45;
+          ctx.textAlign = 'left';
+          ctx.fillStyle = '#ffffff';
+          ctx.font = '900 ' + badgeFont * 1.35 + 'px Arial';
+          ctx.fillText(pad2(now.getHours()) + ':' + pad2(now.getMinutes()), iconX + iconSize + 16 * sizeK, badgeY + badgeH * 0.58);
+          ctx.fillStyle = '#fbbf24';
+          ctx.font = '800 ' + projectFont + 'px Arial';
+          ctx.fillText((project || 'Project name').slice(0, 28), iconX + iconSize + 16 * sizeK, badgeY + badgeH * 0.84);
 
-          ctx.font = "800 " + bodyFont + "px Arial";
-          wrapCanvasText(ctx, latText + ", " + lonText, textX, y, maxTextW, bodyFont * 1.18, 1);
-          y += bodyFont * 1.45;
+          const checkR = badgeH * 0.28;
+          const checkX = badgeX + badgeW - checkR - 14 * sizeK;
+          const checkY = badgeY + badgeH / 2;
+          ctx.fillStyle = '#fbbf24';
+          ctx.beginPath(); ctx.arc(checkX, checkY, checkR, 0, Math.PI * 2); ctx.fill();
+          ctx.strokeStyle = 'rgba(255,255,255,.12)';
+          ctx.lineWidth = 2; ctx.stroke();
+          ctx.strokeStyle = '#3b1a0d';
+          ctx.lineWidth = Math.max(3, 4 * sizeK);
+          ctx.beginPath();
+          ctx.moveTo(checkX - checkR * .38, checkY);
+          ctx.lineTo(checkX - checkR * .10, checkY + checkR * .26);
+          ctx.lineTo(checkX + checkR * .40, checkY - checkR * .34);
+          ctx.stroke();
 
-          ctx.font = "800 " + bodyFont + "px Arial";
-          wrapCanvasText(ctx, altText, textX, y, maxTextW, bodyFont * 1.18, 1);
-          y += bodyFont * 1.45;
+          // Main vertical paragraph block
+          const anchorX = alignRight ? infoX : infoX;
+          let y = H - pad - smallFont * 6.5;
 
-          ctx.font = "800 " + bodyFont + "px Arial";
-          wrapCanvasText(ctx, headingText, textX, y, maxTextW, bodyFont * 1.18, 1);
+          ctx.textAlign = alignRight ? 'right' : 'left';
+          ctx.fillStyle = '#ffffff';
+          ctx.font = '900 ' + titleFont + 'px Arial';
+          drawWrappedText(ctx, label || 'Site label', anchorX, y, infoMaxWidth, titleFont * 1.05, 2, alignRight);
+          y += titleFont * 1.35;
 
-          if (project) {
-            ctx.font = "700 " + smallFont + "px Arial";
-            ctx.fillStyle = "rgba(255,255,255,.82)";
-            wrapCanvasText(ctx, project, textX, blockY - 20 * sizeK, maxTextW, smallFont * 1.1, 1);
-          }
+          ctx.font = '700 ' + lineFont + 'px Arial';
+          drawWrappedText(ctx, dateTimeText, anchorX, y, infoMaxWidth, lineFont * 1.18, 1, alignRight);
+          y += lineFont * 1.28;
+
+          ctx.font = '700 ' + lineFont + 'px Arial';
+          addressLines.forEach(line => {
+            drawWrappedText(ctx, line, anchorX, y, infoMaxWidth, lineFont * 1.16, 1, alignRight);
+            y += lineFont * 1.16;
+          });
+
+          ctx.fillStyle = 'rgba(255,255,255,.96)';
+          drawWrappedText(ctx, 'Weather: ' + weatherText, anchorX, y + 4 * sizeK, infoMaxWidth, lineFont * 1.12, 1, alignRight);
+          y += lineFont * 1.22;
+          drawWrappedText(ctx, latText + ', ' + lonText, anchorX, y, infoMaxWidth, lineFont * 1.12, 1, alignRight);
+          y += lineFont * 1.18;
+          drawWrappedText(ctx, 'Altitude: ' + altitudeText, anchorX, y, infoMaxWidth, lineFont * 1.12, 1, alignRight);
+          y += lineFont * 1.18;
+          drawWrappedText(ctx, 'Speed: ' + speedText, anchorX, y, infoMaxWidth, lineFont * 1.12, 1, alignRight);
+          y += lineFont * 1.18;
+          drawWrappedText(ctx, 'Heading: ' + headingText, anchorX, y, infoMaxWidth, lineFont * 1.12, 1, alignRight);
+          y += lineFont * 1.18;
+          drawWrappedText(ctx, 'Accuracy: ' + accuracyText, anchorX, y, infoMaxWidth, lineFont * 1.08, 1, alignRight);
+          y += lineFont * 1.18;
+          drawWrappedText(ctx, 'Index number: ' + indexNumber, anchorX, y, infoMaxWidth, lineFont * 1.08, 1, alignRight);
 
           if (notes) {
-            ctx.font = "600 " + smallFont + "px Arial";
-            ctx.fillStyle = "rgba(255,255,255,.78)";
-            wrapCanvasText(ctx, "Note: " + notes, textX, Math.min(H - pad, blockY + blockH + smallFont * 1.6), maxTextW, smallFont * 1.1, 1);
+            y += lineFont * 1.10;
+            ctx.font = '600 ' + smallFont + 'px Arial';
+            ctx.fillStyle = 'rgba(255,255,255,.88)';
+            drawWrappedText(ctx, notes, anchorX, y, infoMaxWidth, smallFont * 1.1, 2, alignRight);
           }
+          ctx.restore();
 
-          ctx.shadowBlur = 0;
-          cb(canvas.toDataURL("image/jpeg", .94));
+          // subtle vertical accent beside info block for premium feel
+          const accentH = Math.min(H * 0.34, 260 * sizeK);
+          const accentY = H - pad - accentH;
+          const accentX = alignRight ? anchorX - infoMaxWidth - 18 * sizeK : anchorX + infoMaxWidth + 8 * sizeK;
+          ctx.save();
+          ctx.fillStyle = 'rgba(245, 158, 11, .92)';
+          roundRect(ctx, accentX, accentY, Math.max(5, 6 * sizeK), accentH, 3, true, false);
+          ctx.restore();
+
+          cb(canvas.toDataURL('image/jpeg', .94));
         }
 
-        drawLogo(drawStamp);
+        function finalize() {
+          drawWatermark(ctx, W, pad, (document.getElementById('stampBrandText') ? document.getElementById('stampBrandText').value.trim() : 'TimeMark') || 'TimeMark');
+          drawInfo();
+        }
+
+        if (photoLogoData) {
+          const logo = new Image();
+          logo.onload = function () {
+            ctx.save();
+            ctx.shadowColor = 'rgba(0,0,0,.26)';
+            ctx.shadowBlur = 10;
+            ctx.fillStyle = 'rgba(255,255,255,.90)';
+            roundRect(ctx, logoX - 5, logoY - 5, logoBoxSize + 10, logoBoxSize + 10, 12, true, false);
+            ctx.drawImage(logo, logoX, logoY, logoBoxSize, logoBoxSize);
+            ctx.restore();
+            finalize();
+          };
+          logo.onerror = finalize;
+          logo.src = photoLogoData;
+        } else {
+          finalize();
+        }
       };
       img.src = src;
+    }
+
+    function drawCompassRose(ctx, cx, cy, r, headingDeg) {
+      ctx.save();
+      ctx.shadowColor = 'rgba(0,0,0,.20)';
+      ctx.shadowBlur = 14;
+      ctx.fillStyle = 'rgba(255,255,255,.82)';
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.shadowBlur = 0;
+
+      ctx.strokeStyle = 'rgba(90,90,90,.78)';
+      ctx.lineWidth = Math.max(9, r * .20);
+      ctx.beginPath();
+      ctx.arc(cx, cy, r - ctx.lineWidth/2, 0, Math.PI * 2);
+      ctx.stroke();
+
+      const labels = [
+        ['N', 0], ['E', 90], ['S', 180], ['W', 270]
+      ];
+      ctx.font = '900 ' + Math.max(12, r * .25) + 'px Arial';
+      ctx.fillStyle = 'rgba(70,70,70,.92)';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      labels.forEach(([lab, deg]) => {
+        const rad = (deg - 90) * Math.PI / 180;
+        const lx = cx + Math.cos(rad) * (r - 3);
+        const ly = cy + Math.sin(rad) * (r - 3);
+        ctx.fillText(lab, lx, ly);
+      });
+
+      // Needle
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate((headingDeg - 0) * Math.PI / 180);
+      ctx.beginPath();
+      ctx.moveTo(0, -r * .70);
+      ctx.lineTo(r * .12, r * .40);
+      ctx.lineTo(-r * .12, r * .40);
+      ctx.closePath();
+      ctx.fillStyle = '#18b8d8';
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function headingToCardinal(deg) {
+      const dirs = ['N','NE','E','SE','S','SW','W','NW'];
+      return dirs[Math.round((((deg % 360) + 360) % 360) / 45) % 8];
+    }
+
+    function splitAddressLines(text, maxLines) {
+      const raw = String(text || '').split(',').map(s => s.trim()).filter(Boolean);
+      if (!raw.length) return ['Address not available'];
+      const lines = [];
+      if (raw.length <= maxLines) return raw;
+      const partsPerLine = Math.ceil(raw.length / maxLines);
+      for (let i = 0; i < raw.length; i += partsPerLine) {
+        lines.push(raw.slice(i, i + partsPerLine).join(', '));
+      }
+      return lines.slice(0, maxLines);
+    }
+
+    function drawWrappedText(ctx, text, x, y, maxWidth, lineHeight, maxLines, alignRight) {
+      text = String(text || '');
+      const words = text.split(/\s+/);
+      let line = '';
+      const lines = [];
+      for (let i = 0; i < words.length; i++) {
+        const test = line ? line + ' ' + words[i] : words[i];
+        if (ctx.measureText(test).width > maxWidth && line) {
+          lines.push(line);
+          line = words[i];
+        } else {
+          line = test;
+        }
+      }
+      if (line) lines.push(line);
+      const out = maxLines ? lines.slice(0, maxLines) : lines;
+      if (maxLines && lines.length > maxLines) {
+        let last = out[out.length - 1];
+        while (ctx.measureText(last + '...').width > maxWidth && last.length > 0) last = last.slice(0, -1);
+        out[out.length - 1] = last + '...';
+      }
+      out.forEach((ln, idx) => {
+        ctx.fillText(ln, x, y + idx * lineHeight);
+      });
+      return out.length;
     }
 
     function drawLargeMapCard(ctx, x, y, w, h, style) {
