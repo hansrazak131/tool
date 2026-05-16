@@ -208,8 +208,8 @@
       gap: 14px;
       text-align: left;
       cursor: pointer;
-      box-shadow: 0 8px 22px rgba(17,24,39,.06);
-      border: 1px solid rgba(17,24,39,.04);
+      box-shadow: 0 12px 28px rgba(17,24,39,.07);
+      border: 1px solid rgba(17,24,39,.05);
       transition: transform .15s ease, box-shadow .15s ease;
       font-family: inherit;
     }
@@ -285,7 +285,7 @@
       display: flex;
       align-items: center;
       gap: 18px;
-      box-shadow: 0 12px 26px rgba(15,159,140,.23);
+      box-shadow: 0 16px 34px rgba(15,159,140,.24);
     }
 
     .hero-icon {
@@ -319,8 +319,8 @@
       border-radius: 24px;
       padding: 20px;
       margin-bottom: 18px;
-      box-shadow: 0 8px 22px rgba(17,24,39,.06);
-      border: 1px solid rgba(17,24,39,.04);
+      box-shadow: 0 12px 28px rgba(17,24,39,.07);
+      border: 1px solid rgba(17,24,39,.05);
     }
 
     .info-card {
@@ -608,6 +608,7 @@
       font-size: 16px;
       font-weight: 900;
       cursor: pointer;
+      box-shadow: 0 8px 20px rgba(17,24,39,.05);
     }
 
     .export-btn.purple {
@@ -655,9 +656,11 @@
 
     .ref-stat-box {
       background: #e8fbf7;
-      border-radius: 18px;
-      padding: 16px 8px;
+      border-radius: 20px;
+      padding: 18px 10px;
       text-align: center;
+      border: 1px solid rgba(17,24,39,.04);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.6);
     }
 
     .ref-stat-box.purple { background: #f4e8f8; }
@@ -801,7 +804,7 @@
       overflow: hidden;
       background: white;
       border: 2px solid transparent;
-      box-shadow: 0 8px 22px rgba(17,24,39,.05);
+      box-shadow: 0 12px 28px rgba(17,24,39,.06);
     }
 
     .ref-section-head {
@@ -1062,8 +1065,8 @@
       border-radius: 24px;
       padding: 17px;
       margin-bottom: 18px;
-      box-shadow: 0 8px 22px rgba(17,24,39,.06);
-      border: 1px solid rgba(17,24,39,.04);
+      box-shadow: 0 12px 28px rgba(17,24,39,.07);
+      border: 1px solid rgba(17,24,39,.05);
     }
 
     .gps-pin {
@@ -1114,8 +1117,8 @@
       background: white;
       border-radius: 22px;
       padding: 14px;
-      box-shadow: 0 8px 22px rgba(17,24,39,.06);
-      border: 1px solid rgba(17,24,39,.04);
+      box-shadow: 0 12px 28px rgba(17,24,39,.07);
+      border: 1px solid rgba(17,24,39,.05);
     }
 
     .photo-item img {
@@ -1150,8 +1153,8 @@
       padding: 34px 20px;
       text-align: center;
       color: var(--muted);
-      box-shadow: 0 8px 22px rgba(17,24,39,.06);
-      border: 1px solid rgba(17,24,39,.04);
+      box-shadow: 0 12px 28px rgba(17,24,39,.07);
+      border: 1px solid rgba(17,24,39,.05);
     }
 
     .empty-state .big-icon {
@@ -1250,9 +1253,11 @@
 
     .stat-box {
       background: #e8fbf7;
-      border-radius: 18px;
-      padding: 16px 8px;
+      border-radius: 20px;
+      padding: 18px 10px;
       text-align: center;
+      border: 1px solid rgba(17,24,39,.04);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.6);
     }
 
     .stat-box.purple {
@@ -1354,8 +1359,8 @@
       background: white;
       border-radius: 22px;
       padding: 16px;
-      box-shadow: 0 8px 22px rgba(17,24,39,.06);
-      border: 1px solid rgba(17,24,39,.04);
+      box-shadow: 0 12px 28px rgba(17,24,39,.07);
+      border: 1px solid rgba(17,24,39,.05);
     }
 
     .note-item h4 {
@@ -2782,16 +2787,19 @@
               <div style="position:absolute;left:-10px;top:50%;transform:translateY(-50%);">W</div>
               <div style="width:0;height:0;border-left:9px solid transparent;border-right:9px solid transparent;border-bottom:30px solid #19c2df;transform:translateY(-6px);"></div>
             </div>
-            <div class="preview-stamp" id="stampPreviewBox" style="position:absolute;left:16px;bottom:16px;width:126px;grid-template-columns:1fr;padding:0;background:rgba(255,255,255,.18);border:none;backdrop-filter:none;">
-              <div class="preview-map" style="width:126px;height:100px;border-radius:8px"></div>
-            </div>
-            <div style="position:absolute;right:18px;bottom:18px;text-align:right;color:#fff;max-width:48%;text-shadow:0 2px 6px rgba(0,0,0,.75);">
-              <div class="preview-time-badge" style="margin-left:auto;background:rgba(39,16,10,.78);">10:57 <span class="ok-dot">✓</span></div>
-              <div style="font-size:24px;font-weight:900;line-height:1.08;margin-top:8px;">Projects mill</div>
-              <div style="font-size:14px;line-height:1.25;margin-top:8px;">Jum, 10/10/2025</div>
-              <div style="font-size:14px;line-height:1.22;margin-top:6px;">Marga Mulya, Kec. Semangga, Papua</div>
-              <div style="font-size:14px;line-height:1.22;margin-top:6px;">Berawan 32°C</div>
+            <div style="position:absolute;right:16px;top:14px;width:54px;height:54px;border-radius:12px;background:rgba(255,255,255,.9);display:grid;place-items:center;box-shadow:0 6px 16px rgba(0,0,0,.18);font-weight:900;color:#f59e0b;font-size:16px;">LOGO</div>
+            <div style="position:absolute;left:20px;bottom:22px;width:6px;height:190px;border-radius:99px;background:#f2a512;"></div>
+            <div style="position:absolute;left:36px;bottom:22px;color:#fff;max-width:44%;text-shadow:0 2px 6px rgba(0,0,0,.75);">
+              <div style="font-size:24px;font-weight:900;line-height:1.06;margin-top:0;">Projects mill</div>
+              <div style="font-size:16px;font-weight:800;color:#fbbf24;line-height:1.2;margin-top:8px;">PT Global Papua Abadi</div>
+              <div style="font-size:14px;line-height:1.24;margin-top:10px;">Jum, 10/10/2025 • 10:57</div>
+              <div style="font-size:14px;line-height:1.22;margin-top:6px;">Marga Mulya, Kec. Semangga, Kabupaten Merauke</div>
+              <div style="font-size:14px;line-height:1.22;margin-top:6px;">Cuaca: Berawan 32°C • RH 90%</div>
               <div style="font-size:14px;line-height:1.22;margin-top:6px;">8.404950°S, 140.472483°E</div>
+              <div style="font-size:13px;line-height:1.22;margin-top:6px;">Altitude 77.6 m • Arah 204° SW • Note: Footing NE</div>
+            </div>
+            <div id="stampPreviewBox" style="position:absolute;right:18px;bottom:18px;width:126px;padding:0;background:rgba(255,255,255,.18);border:none;border-radius:12px;backdrop-filter:none;">
+              <div class="preview-map" style="width:126px;height:100px;border-radius:10px"></div>
             </div>
           </div>
         </div>
@@ -2802,7 +2810,7 @@
         </div>
 
         <div class="timestamp-note">
-          Output premium kini memakai template yang lebih lengkap: kompas arah mata angin di atas foto, peta kecil, badge waktu/project, logo kecil, cuaca, heading, koordinat, alamat singkat, elevasi, kecepatan, dan nomor indeks. Teks dibuat vertikal/tinggi agar mirip aplikasi GPS camera lapangan.
+          Output premium kini memakai layout baru yang lebih rapi: kompas di kiri atas, logo di kanan atas, paragraf informasi vertikal di kiri bawah dengan garis aksen, peta di kanan bawah, serta notes diletakkan paling bawah agar tidak overlap. Waktu tampil sebagai teks polos tanpa badge background, mengikuti style aplikasi GPS camera lapangan yang lebih premium.
         </div>
 
         <div class="modal-actions sticky-actions">
@@ -3972,7 +3980,8 @@
       box.style.transformOrigin = "left center";
     }
 
-    function createAnnotatedImage(src, label, project, notes, cb) {
+    
+function createAnnotatedImage(src, label, project, notes, cb) {
       const img = new Image();
       img.onload = function () {
         const canvas = document.createElement("canvas");
@@ -3999,11 +4008,10 @@
         const headingCard = headingToCardinal(headingDeg);
         const headingText = Math.round(headingDeg) + "° " + headingCard;
         const speedMps = gps && gps.speed != null && !isNaN(gps.speed) ? gps.speed : 0;
-        const speedKmh = (speedMps * 3.6);
+        const speedKmh = speedMps * 3.6;
         const speedText = speedKmh.toFixed(1) + " km/h";
         const alt = gps && gps.altitude != null && !isNaN(gps.altitude) ? gps.altitude : null;
         const altitudeText = alt != null ? alt.toFixed(1) + " m" : ((gps && gps.accuracy != null) ? "±" + gps.accuracy.toFixed(1) + " m" : "-");
-        const accuracyText = gps && gps.accuracy != null ? "±" + gps.accuracy.toFixed(1) + " m" : "-";
         const indexNumber = savedPhotos && savedPhotos.length ? String(savedPhotos.length).padStart(2, "0") : "01";
 
         const addressRaw = photoAddressShort && photoAddressShort !== "Address not available"
@@ -4024,155 +4032,172 @@
         const timeText = pad2(now.getHours()) + "." + pad2(now.getMinutes()) + "." + pad2(now.getSeconds());
         const dateTimeText = dateText + " " + timeText;
 
-        // 1) Compass overlay top-left
         const compassR = Math.max(48, Math.min(88, W * 0.07)) * sizeK;
         const compassCX = pad + compassR + 8;
         const compassCY = pad + compassR + 8;
         drawCompassRose(ctx, compassCX, compassCY, compassR, headingDeg);
 
-        // 2) Map overlay bottom-left
-        const mapW = Math.min(W * 0.24, 265 * sizeK);
+        const logoBoxSize = Math.max(56, Math.min(98, W * 0.078)) * sizeK;
+        const logoX = W - pad - logoBoxSize;
+        const logoY = pad + 8;
+
+        const mapW = Math.min(W * 0.25, 275 * sizeK);
         const mapH = mapW * 0.80;
-        const mapX = pad;
+        const mapX = W - pad - mapW;
         const mapY = H - mapH - pad;
         drawLargeMapCard(ctx, mapX, mapY, mapW, mapH, opt.mapStyle);
 
-        // 3) Brand logo small on upper-right if provided
-        const logoBoxSize = Math.max(48, Math.min(82, W * 0.065)) * sizeK;
-        const logoX = W - pad - logoBoxSize;
-        const logoY = pad + 10;
+        const textLeft = pad + 20 * sizeK;
+        const textRightLimit = mapX - (28 * sizeK);
+        const infoMaxWidth = Math.max(250 * sizeK, Math.min(W * 0.46, textRightLimit - textLeft));
 
-        const infoSide = (opt.position || 'bottom-right').includes('left') ? 'left' : 'right';
-        const alignRight = infoSide === 'right';
-        const textRight = W - pad;
-        const textLeft = pad;
-        const infoX = alignRight ? textRight : textLeft;
-        const infoMaxWidth = Math.min(W * 0.42, 520 * sizeK);
+        const titleFont = Math.max(26, W * 0.036) * sizeK;
+        const projectFont = Math.max(18, W * 0.025) * sizeK;
+        const lineFont = Math.max(15, W * 0.0215) * sizeK;
+        const smallFont = Math.max(14, W * 0.0185) * sizeK;
 
-        const titleFont = Math.max(24, W * 0.034) * sizeK;
-        const lineFont = Math.max(18, W * 0.024) * sizeK;
-        const smallFont = Math.max(16, W * 0.019) * sizeK;
-        const badgeFont = Math.max(18, W * 0.021) * sizeK;
-        const projectFont = Math.max(19, W * 0.022) * sizeK;
+        function wrapLinesWithFont(fontSpec, text, maxWidth, maxLines) {
+          ctx.save();
+          ctx.font = fontSpec;
+          const words = String(text || '').split(/\s+/).filter(Boolean);
+          const lines = [];
+          let line = '';
+          words.forEach(word => {
+            const test = line ? line + ' ' + word : word;
+            if (ctx.measureText(test).width > maxWidth && line) {
+              lines.push(line);
+              line = word;
+            } else {
+              line = test;
+            }
+          });
+          if (line) lines.push(line);
+          let out = maxLines ? lines.slice(0, maxLines) : lines;
+          if (maxLines && lines.length > maxLines) {
+            let last = out[out.length - 1];
+            while (ctx.measureText(last + '...').width > maxWidth && last.length > 0) last = last.slice(0, -1);
+            out[out.length - 1] = last + '...';
+          }
+          ctx.restore();
+          return out;
+        }
+
+        const blocks = [];
+        blocks.push({
+          font: '900 ' + titleFont + 'px Arial',
+          fill: '#ffffff',
+          lineHeight: titleFont * 1.04,
+          gapAfter: 10 * sizeK,
+          lines: wrapLinesWithFont('900 ' + titleFont + 'px Arial', label || 'Site label', infoMaxWidth, 2)
+        });
+
+        if (project) {
+          blocks.push({
+            font: '800 ' + projectFont + 'px Arial',
+            fill: '#fbbf24',
+            lineHeight: projectFont * 1.08,
+            gapAfter: 12 * sizeK,
+            lines: wrapLinesWithFont('800 ' + projectFont + 'px Arial', project, infoMaxWidth, 1)
+          });
+        }
+
+        blocks.push({
+          font: '700 ' + lineFont + 'px Arial',
+          fill: '#ffffff',
+          lineHeight: lineFont * 1.14,
+          gapAfter: 8 * sizeK,
+          lines: [dateTimeText]
+        });
+
+        addressLines.forEach((line, idx) => {
+          blocks.push({
+            font: '700 ' + lineFont + 'px Arial',
+            fill: '#ffffff',
+            lineHeight: lineFont * 1.14,
+            gapAfter: idx === addressLines.length - 1 ? 10 * sizeK : 4 * sizeK,
+            lines: wrapLinesWithFont('700 ' + lineFont + 'px Arial', line, infoMaxWidth, 1)
+          });
+        });
+
+        [
+          'Cuaca: ' + weatherText,
+          latText + ', ' + lonText,
+          'Altitude: ' + altitudeText,
+          'Arah: ' + headingText,
+          'Kecepatan: ' + speedText,
+          'Index number: ' + indexNumber
+        ].forEach((line, idx, arr) => {
+          blocks.push({
+            font: '700 ' + lineFont + 'px Arial',
+            fill: idx === 0 ? '#f8fafc' : 'rgba(255,255,255,.96)',
+            lineHeight: lineFont * 1.12,
+            gapAfter: idx === arr.length - 1 ? 0 : 6 * sizeK,
+            lines: wrapLinesWithFont('700 ' + lineFont + 'px Arial', line, infoMaxWidth, 1)
+          });
+        });
+
+        if (notes) {
+          blocks.push({
+            font: '600 ' + smallFont + 'px Arial',
+            fill: 'rgba(255,255,255,.92)',
+            lineHeight: smallFont * 1.18,
+            gapAfter: 0,
+            lines: wrapLinesWithFont('600 ' + smallFont + 'px Arial', 'Notes: ' + notes, infoMaxWidth, 3),
+            spacerBefore: 14 * sizeK
+          });
+        }
+
+        let totalHeight = 0;
+        blocks.forEach(block => {
+          totalHeight += (block.spacerBefore || 0) + (block.lines.length * block.lineHeight) + (block.gapAfter || 0);
+        });
+
+        const minTop = compassCY + compassR + 26 * sizeK;
+        const startY = Math.max(minTop, H - pad - totalHeight);
 
         function drawInfo() {
           ctx.save();
-          ctx.textAlign = alignRight ? 'right' : 'left';
-          ctx.fillStyle = '#ffffff';
-          ctx.shadowColor = 'rgba(0,0,0,.88)';
-          ctx.shadowBlur = 8;
+          ctx.textAlign = 'left';
+          ctx.textBaseline = 'top';
+          ctx.shadowColor = 'rgba(0,0,0,.78)';
+          ctx.shadowBlur = 10;
           ctx.shadowOffsetY = 2;
 
-          // Project/time badge above paragraph, inspired by reference but cleaner.
-          const badgeH = Math.max(58, 68 * sizeK);
-          const badgeW = Math.min(infoMaxWidth, Math.max(330 * sizeK, W * 0.26));
-          const badgeX = alignRight ? infoX - badgeW : infoX;
-          const badgeY = H - pad - (smallFont * 8.8) - badgeH - 30 * sizeK;
+          const accentX = textLeft - 18 * sizeK;
+          const accentY = startY + 2 * sizeK;
+          const accentH = totalHeight - (notes ? 0 : 6 * sizeK);
+          ctx.fillStyle = '#f2a512';
+          roundRect(ctx, accentX, accentY, Math.max(5, 6 * sizeK), accentH, 4, true, false);
 
-          ctx.shadowBlur = 16;
-          ctx.shadowColor = 'rgba(0,0,0,.28)';
-          ctx.fillStyle = 'rgba(59, 26, 13, ' + Math.max(0.54, Math.min(0.86, opt.opacity)) + ')';
-          roundRect(ctx, badgeX, badgeY, badgeW, badgeH, 14 * sizeK, true, false);
-          ctx.shadowBlur = 0;
-
-          const iconSize = badgeH - 18 * sizeK;
-          const iconX = badgeX + 10 * sizeK;
-          const iconY = badgeY + 9 * sizeK;
-          ctx.fillStyle = 'rgba(255,255,255,.95)';
-          roundRect(ctx, iconX, iconY, iconSize, iconSize, 10 * sizeK, true, false);
-          drawMiniLandscapeIcon(ctx, iconX, iconY, iconSize);
-
-          ctx.textAlign = 'left';
-          ctx.fillStyle = '#ffffff';
-          ctx.font = '900 ' + badgeFont * 1.35 + 'px Arial';
-          ctx.fillText(pad2(now.getHours()) + ':' + pad2(now.getMinutes()), iconX + iconSize + 16 * sizeK, badgeY + badgeH * 0.58);
-          ctx.fillStyle = '#fbbf24';
-          ctx.font = '800 ' + projectFont + 'px Arial';
-          ctx.fillText((project || 'Project name').slice(0, 28), iconX + iconSize + 16 * sizeK, badgeY + badgeH * 0.84);
-
-          const checkR = badgeH * 0.28;
-          const checkX = badgeX + badgeW - checkR - 14 * sizeK;
-          const checkY = badgeY + badgeH / 2;
-          ctx.fillStyle = '#fbbf24';
-          ctx.beginPath(); ctx.arc(checkX, checkY, checkR, 0, Math.PI * 2); ctx.fill();
-          ctx.strokeStyle = 'rgba(255,255,255,.12)';
-          ctx.lineWidth = 2; ctx.stroke();
-          ctx.strokeStyle = '#3b1a0d';
-          ctx.lineWidth = Math.max(3, 4 * sizeK);
-          ctx.beginPath();
-          ctx.moveTo(checkX - checkR * .38, checkY);
-          ctx.lineTo(checkX - checkR * .10, checkY + checkR * .26);
-          ctx.lineTo(checkX + checkR * .40, checkY - checkR * .34);
-          ctx.stroke();
-
-          // Main vertical paragraph block
-          const anchorX = alignRight ? infoX : infoX;
-          let y = H - pad - smallFont * 6.5;
-
-          ctx.textAlign = alignRight ? 'right' : 'left';
-          ctx.fillStyle = '#ffffff';
-          ctx.font = '900 ' + titleFont + 'px Arial';
-          drawWrappedText(ctx, label || 'Site label', anchorX, y, infoMaxWidth, titleFont * 1.05, 2, alignRight);
-          y += titleFont * 1.35;
-
-          ctx.font = '700 ' + lineFont + 'px Arial';
-          drawWrappedText(ctx, dateTimeText, anchorX, y, infoMaxWidth, lineFont * 1.18, 1, alignRight);
-          y += lineFont * 1.28;
-
-          ctx.font = '700 ' + lineFont + 'px Arial';
-          addressLines.forEach(line => {
-            drawWrappedText(ctx, line, anchorX, y, infoMaxWidth, lineFont * 1.16, 1, alignRight);
-            y += lineFont * 1.16;
+          let y = startY;
+          blocks.forEach(block => {
+            y += block.spacerBefore || 0;
+            ctx.font = block.font;
+            ctx.fillStyle = block.fill;
+            block.lines.forEach(line => {
+              ctx.fillText(line, textLeft, y);
+              y += block.lineHeight;
+            });
+            y += block.gapAfter || 0;
           });
 
-          ctx.fillStyle = 'rgba(255,255,255,.96)';
-          drawWrappedText(ctx, 'Weather: ' + weatherText, anchorX, y + 4 * sizeK, infoMaxWidth, lineFont * 1.12, 1, alignRight);
-          y += lineFont * 1.22;
-          drawWrappedText(ctx, latText + ', ' + lonText, anchorX, y, infoMaxWidth, lineFont * 1.12, 1, alignRight);
-          y += lineFont * 1.18;
-          drawWrappedText(ctx, 'Altitude: ' + altitudeText, anchorX, y, infoMaxWidth, lineFont * 1.12, 1, alignRight);
-          y += lineFont * 1.18;
-          drawWrappedText(ctx, 'Speed: ' + speedText, anchorX, y, infoMaxWidth, lineFont * 1.12, 1, alignRight);
-          y += lineFont * 1.18;
-          drawWrappedText(ctx, 'Heading: ' + headingText, anchorX, y, infoMaxWidth, lineFont * 1.12, 1, alignRight);
-          y += lineFont * 1.18;
-          drawWrappedText(ctx, 'Accuracy: ' + accuracyText, anchorX, y, infoMaxWidth, lineFont * 1.08, 1, alignRight);
-          y += lineFont * 1.18;
-          drawWrappedText(ctx, 'Index number: ' + indexNumber, anchorX, y, infoMaxWidth, lineFont * 1.08, 1, alignRight);
-
-          if (notes) {
-            y += lineFont * 1.10;
-            ctx.font = '600 ' + smallFont + 'px Arial';
-            ctx.fillStyle = 'rgba(255,255,255,.88)';
-            drawWrappedText(ctx, notes, anchorX, y, infoMaxWidth, smallFont * 1.1, 2, alignRight);
-          }
           ctx.restore();
-
-          // subtle vertical accent beside info block for premium feel
-          const accentH = Math.min(H * 0.34, 260 * sizeK);
-          const accentY = H - pad - accentH;
-          const accentX = alignRight ? anchorX - infoMaxWidth - 18 * sizeK : anchorX + infoMaxWidth + 8 * sizeK;
-          ctx.save();
-          ctx.fillStyle = 'rgba(245, 158, 11, .92)';
-          roundRect(ctx, accentX, accentY, Math.max(5, 6 * sizeK), accentH, 3, true, false);
-          ctx.restore();
-
-          cb(canvas.toDataURL('image/jpeg', .94));
         }
 
         function finalize() {
           drawWatermark(ctx, W, pad, (document.getElementById('stampBrandText') ? document.getElementById('stampBrandText').value.trim() : 'TimeMark') || 'TimeMark');
           drawInfo();
+          cb(canvas.toDataURL('image/jpeg', .94));
         }
 
         if (photoLogoData) {
           const logo = new Image();
           logo.onload = function () {
             ctx.save();
-            ctx.shadowColor = 'rgba(0,0,0,.26)';
-            ctx.shadowBlur = 10;
-            ctx.fillStyle = 'rgba(255,255,255,.90)';
-            roundRect(ctx, logoX - 5, logoY - 5, logoBoxSize + 10, logoBoxSize + 10, 12, true, false);
+            ctx.shadowColor = 'rgba(0,0,0,.24)';
+            ctx.shadowBlur = 12;
+            ctx.fillStyle = 'rgba(255,255,255,.92)';
+            roundRect(ctx, logoX - 7, logoY - 7, logoBoxSize + 14, logoBoxSize + 14, 14, true, false);
             ctx.drawImage(logo, logoX, logoY, logoBoxSize, logoBoxSize);
             ctx.restore();
             finalize();
