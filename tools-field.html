@@ -80,6 +80,20 @@ body{margin:0;font-family:Poppins,Arial,sans-serif;background:var(--bg);color:va
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.form-group{margin-bottom:14px}.form-group.full{grid-column:1/-1}label{display:block;font-size:14px;color:var(--muted);font-weight:800;margin-bottom:7px}input,select{width:100%;border:2px solid #e6e2ec;border-radius:16px;padding:14px;font-family:inherit;font-size:15px;outline:none;background:white}input:focus,select:focus{border-color:var(--mint)}.reading-row{background:#faf8fc;border:1px solid var(--line);border-radius:18px;padding:14px;margin-bottom:12px}.reading-grid{display:grid;grid-template-columns:1.2fr .8fr .8fr .8fr .8fr;gap:8px}.table-wrap{overflow-x:auto}table{width:100%;min-width:680px;border-collapse:collapse}th,td{padding:11px;border-bottom:1px solid #eee;font-size:13px;text-align:left}th{color:var(--muted)}.summary{display:grid;gap:10px}.summary div{display:flex;justify-content:space-between;gap:12px;font-weight:800}.summary span{color:var(--mint);text-align:right}.empty{text-align:center;color:var(--muted);padding:26px}
 .loop-shell{background:white;border-radius:26px;padding:14px;box-shadow:var(--shadow);overflow:hidden}.loop-note{font-size:13px;color:var(--muted);line-height:1.6;margin:0 0 12px;padding:0 6px}.loop-frame{width:100%;height:78vh;min-height:720px;border:0;border-radius:18px;background:#07111d;display:block}
 @media(max-width:640px){.header{padding:23px 18px}.header h1{font-size:24px}.content{padding:18px}.menu-card{grid-template-columns:64px 1fr 22px}.menu-card h2{font-size:20px}.hero-degree{font-size:48px}.hero-cardinal{font-size:26px}.compass-readout .deg{font-size:58px}.compass-readout .cardinal{font-size:21px}.ar-stage{height:620px}.ar-heading-main b{font-size:34px}.ar-heading-main span{font-size:21px}.heading-tape{top:108px}.tape-content{gap:8px}.tape-item{min-width:42px}.ar-compass-ring{width:230px;height:230px}.ar-cross-v{height:300px}.ar-cross-h{width:300px}.ar-center-degree b{font-size:36px}.ar-center-degree small{font-size:16px}.bubble-overlay{width:100px}.mini-bubble{width:74px;height:74px}.ar-info{width:185px;font-size:10px}.btn-row,.btn-row-3,.ar-actions,.form-grid,.telemetry-grid{grid-template-columns:1fr}.reading-grid{grid-template-columns:1fr 1fr}.loop-frame{height:82vh;min-height:680px}}
+
+/* === Bubble Level Fix: horizontal + vertical micro scale === */
+.bubble-overlay{width:148px !important;left:12px !important;bottom:12px !important}
+.level-ui{display:flex;align-items:flex-end;gap:8px}
+.level-v{width:18px;height:86px;border-radius:12px;position:relative;overflow:hidden;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.45);box-shadow:0 0 10px rgba(0,0,0,.15)}
+.level-v:before{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(255,255,255,.92);box-shadow:0 -18px 0 rgba(255,255,255,.38),0 18px 0 rgba(255,255,255,.38)}
+.level-h{width:88px;height:18px;border-radius:12px;position:relative;overflow:hidden;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.45);box-shadow:0 0 10px rgba(0,0,0,.15);margin-top:6px}
+.level-h:before{content:"";position:absolute;top:0;bottom:0;left:50%;width:1px;background:rgba(255,255,255,.92);box-shadow:-22px 0 0 rgba(255,255,255,.38),22px 0 0 rgba(255,255,255,.38)}
+.level-dot{position:absolute;width:10px;height:10px;border-radius:50%;background:#ffb020;box-shadow:0 0 8px rgba(255,176,32,.9);left:50%;top:50%;transform:translate(-50%,-50%)}
+.level-v .level-dot{left:50%}
+.level-h .level-dot{top:50%}
+.bubble-status{font-size:9.5px;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.95);margin-top:4px;line-height:1.25}
+@media(max-width:640px){.bubble-overlay{width:138px !important}.mini-bubble{width:78px;height:78px}.level-v{height:78px}.level-h{width:80px}}
+
 </style>
 </head>
 <body>
@@ -116,7 +130,7 @@ body{margin:0;font-family:Poppins,Arial,sans-serif;background:var(--bg);color:va
       <video id="camera" autoplay muted playsinline></video><div class="camera-placeholder" id="cameraPlaceholder"><div><b>AR Compass belum aktif</b><br>Tekan <b>START AR</b>, lalu izinkan Camera, Location, dan Sensor.</div></div>
       <div class="ar-overlay"><div class="ar-top"><div class="chips"><div class="chip">📡 GPS: <span id="gpsText">Waiting</span></div><div class="chip">📷 Camera: <span id="camText">Standby</span></div><div class="chip">🎯 Acc: <span id="accText">-</span></div></div><div class="ar-heading"><div class="ar-heading-main"><b id="arHeadingBig">0°</b><span id="arCardinalBig">N</span></div><small id="arHeadingSub">Real-time field bearing</small></div></div>
       <div class="heading-tape"><div class="tape-content" id="headingTape"></div><div class="tape-center"></div></div><div class="ar-cross-v"></div><div class="ar-cross-h"></div><div class="ar-compass-ring"></div><div class="ar-center-degree"><b id="arCenterHeading">0°</b><small id="arCenterCardinal">N</small></div>
-      <div class="bubble-overlay"><h4>Bubble</h4><div class="xy">X:<span id="xVal">0.0</span> Y:<span id="yVal">0.0</span></div><div class="mini-bubble"><div class="bubble-ring"></div><div class="bubble-dot" id="bubbleDot"></div></div></div>
+      <div class="bubble-overlay"><h4>Bubble Level</h4><div class="xy">X:<span id="xVal">0.0</span> Y:<span id="yVal">0.0</span></div><div class="level-ui"><div class="level-v"><div class="level-dot" id="vLevelDot"></div></div><div><div class="mini-bubble"><div class="bubble-ring"></div><div class="bubble-dot" id="bubbleDot"></div></div><div class="level-h"><div class="level-dot" id="hLevelDot"></div></div></div></div><div class="bubble-status" id="bubbleStatus">Sensor tilt waiting...</div></div>
       <div class="ar-info"><b>GPS Average</b><div id="arGpsInfo">Waiting GPS permission</div><div id="arTiltInfo">Pitch/Y: 0.0° • Roll/X: 0.0°</div></div></div>
     </div>
     <div class="ar-actions"><button class="btn btn-mint" onclick="startAR()">START AR</button><button class="btn btn-purple" onclick="captureWaypoint()">WAYPOINT</button><button class="btn btn-gray" onclick="takeScreenshot()">SCREENSHOT</button></div>
@@ -1635,7 +1649,7 @@ function swRTab(dir, tab, btn) {
 </div>
 
 <script>
-let compassMode='normal';let heading=0,pitch=0,roll=0,lockedBearing=null;let gpsSamples=[],gpsAvg=null,gpsWatch=null;let cameraReady=false,cameraStream=null,orientReady=false;let waypoints=[],readings=[];let rawHeading=0,lastHeading=null,lastSensorMs=0,sensorSource='WAIT',relativeCompass=false;let compassOffset=parseFloat(localStorage.getItem('fieldToolsCompassOffset')||'0');let absSensor=null;
+let compassMode='normal';let heading=0,pitch=0,roll=0,lockedBearing=null;let gpsSamples=[],gpsAvg=null,gpsWatch=null;let cameraReady=false,cameraStream=null,orientReady=false;let waypoints=[],readings=[];let rawHeading=0,lastHeading=null,lastSensorMs=0,sensorSource='WAIT',relativeCompass=false;let compassOffset=parseFloat(localStorage.getItem('fieldToolsCompassOffset')||'0');let absSensor=null;let motionReady=false,lastTiltMs=0;
 function openScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');if(id==='compass'){startGps();startSensors();makeHeadingTape();}if(id==='levelBook'||id==='loopAdjustment'){startGps();}}
 function setCompassMode(mode){compassMode=mode;document.getElementById('normalModeBtn').classList.remove('active');document.getElementById('arModeBtn').classList.remove('active');if(mode==='normal'){document.getElementById('normalCompassView').style.display='block';document.getElementById('arCompassView').classList.remove('active');document.getElementById('normalModeBtn').classList.add('active');}else{document.getElementById('normalCompassView').style.display='none';document.getElementById('arCompassView').classList.add('active');document.getElementById('arModeBtn').classList.add('active');startAR();}}
 function setGpsClass(cls){['gpsDotHome','gpsDotCompass','gpsDotLevel','gpsDotLoop'].forEach(id=>{const el=document.getElementById(id);if(!el)return;el.className='gps-dot '+cls;});}
@@ -1645,11 +1659,19 @@ function updateGpsUI(){if(!gpsAvg)return;const lat=gpsAvg.lat.toFixed(6);const l
 function showGpsInfo(){if(!gpsAvg){alert('GPS belum mendapatkan posisi.\n\nPutih = belum aktif\nKuning = mencari lokasi\nHijau = lokasi terkunci\nMerah = izin lokasi ditolak/error');return;}alert('GPS Location Locked\n\n'+'Latitude  : '+gpsAvg.lat.toFixed(8)+'\n'+'Longitude : '+gpsAvg.lon.toFixed(8)+'\n'+'Accuracy  : ±'+gpsAvg.acc.toFixed(1)+' m\n'+'Altitude  : '+(gpsAvg.alt!==null?gpsAvg.alt.toFixed(1)+' m':'-')+'\n'+'Average   : '+gpsAvg.count+' pengamatan');}
 async function startAR(){startGps();startSensors();if(cameraReady)return;const video=document.getElementById('camera');const placeholder=document.getElementById('cameraPlaceholder');if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){setText('camText','Unsupported');return;}try{cameraStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1280},height:{ideal:720}},audio:false});video.srcObject=cameraStream;cameraReady=true;placeholder.style.display='none';setText('camText','Active');}catch(e){console.log(e);setText('camText','Denied');}}
 function startSensors(){
-  if(orientReady)return;
+  const attachMotion=()=>{
+    if(motionReady)return;
+    window.addEventListener('devicemotion',motionHandler,true);
+    motionReady=true;
+    setText('bubbleStatus','Tilt sensor active');
+  };
   const attachDeviceOrientation=()=>{
-    window.addEventListener('deviceorientationabsolute',orientationHandler,true);
-    window.addEventListener('deviceorientation',orientationHandler,true);
-    orientReady=true;
+    if(!orientReady){
+      window.addEventListener('deviceorientationabsolute',orientationHandler,true);
+      window.addEventListener('deviceorientation',orientationHandler,true);
+      orientReady=true;
+    }
+    attachMotion();
     setText('normalCompassSub','Sensor aktif. Gerakkan HP membentuk angka 8 untuk kalibrasi.');
   };
   const tryGenericSensor=async()=>{
@@ -1666,6 +1688,7 @@ function startSensors(){
         absSensor.start();
         orientReady=true;
         sensorSource='ABS';
+        attachMotion();
         setText('normalCompassSub','Sensor absolute aktif. Jika arah tidak tepat, lakukan kalibrasi.');
         return true;
       }
@@ -1676,15 +1699,21 @@ function startSensors(){
     const ok=await tryGenericSensor();
     if(!ok)attachDeviceOrientation();
   };
+  if(typeof DeviceMotionEvent!=='undefined'&&typeof DeviceMotionEvent.requestPermission==='function'){
+    DeviceMotionEvent.requestPermission().then(()=>{}).catch(()=>{});
+  }
   if(typeof DeviceOrientationEvent!=='undefined'&&typeof DeviceOrientationEvent.requestPermission==='function'){
-    DeviceOrientationEvent.requestPermission().then(state=>{if(state==='granted')requestThenStart();else alert('Izin sensor orientasi ditolak.');}).catch(()=>requestThenStart());
+    DeviceOrientationEvent.requestPermission().then(state=>{if(state==='granted')requestThenStart();else {attachMotion();alert('Izin sensor orientasi ditolak. Bubble level mencoba memakai motion sensor.');}}).catch(()=>requestThenStart());
   }else{
     requestThenStart();
   }
 }
 function orientationHandler(e){
-  pitch=e.beta||0;
-  roll=e.gamma||0;
+  if(typeof e.beta==='number' && typeof e.gamma==='number'){
+    pitch=e.beta;
+    roll=e.gamma;
+    lastTiltMs=Date.now();
+  }
   let h=null;
   if(typeof e.webkitCompassHeading==='number'){
     h=e.webkitCompassHeading;
@@ -1702,6 +1731,20 @@ function orientationHandler(e){
   }
   if(h!==null)applyHeading(h,sensorSource);
   updateBubble();
+}
+function motionHandler(e){
+  const g=e.accelerationIncludingGravity;
+  if(!g)return;
+  const ax=g.x||0, ay=g.y||0, az=g.z||0;
+  const mag=Math.sqrt(ax*ax+ay*ay+az*az);
+  if(!mag || mag<4)return;
+  const mRoll=Math.atan2(ax, Math.sqrt(ay*ay+az*az))*180/Math.PI;
+  const mPitch=Math.atan2(-ay, Math.sqrt(ax*ax+az*az))*180/Math.PI;
+  if(Date.now()-lastTiltMs>150){
+    roll=roll*0.65 + mRoll*0.35;
+    pitch=pitch*0.65 + mPitch*0.35;
+    updateBubble();
+  }
 }
 function applyHeading(raw,source){
   rawHeading=norm(raw);
@@ -1745,7 +1788,23 @@ function showCompassCalibrationGuide(){
 }
 function updateCompass(){const deg=Math.round(heading);const card=cardinal(deg);setText('normalHeadingText',deg+'°');setText('normalCardinalText',card);setText('normalCenterDegree',deg+'°');setText('normalCenterCardinal',card);setText('arHeadingBig',deg+'°');setText('arCardinalBig',card);setText('arCenterHeading',deg+'°');setText('arCenterCardinal',card);setText('headingTelemetry',heading.toFixed(1)+'°');setText('cardinalTelemetry',card);const scale=document.getElementById('normalCompassScale');const numbers=document.getElementById('normalCompassNumbers');if(scale)scale.style.transform=`rotate(${-heading}deg)`;if(numbers)numbers.style.transform=`rotate(${-heading}deg)`;makeHeadingTape();}
 function makeHeadingTape(){const box=document.getElementById('headingTape');if(!box)return;const center=Math.round(heading);let html='';for(let i=-3;i<=3;i++){const d=norm(center+i*15);html+=`<div class="tape-item"><b>${shortCardinal(d)}</b>${Math.round(d)}°</div>`;}box.innerHTML=html;}
-function updateBubble(){const x=clamp(roll*0.8,-28,28);const y=clamp(pitch*0.8,-28,28);setText('xVal',roll.toFixed(1));setText('yVal',pitch.toFixed(1));setText('pitchTelemetry',pitch.toFixed(1)+'°');setText('rollTelemetry',roll.toFixed(1)+'°');setText('arTiltInfo',`Pitch/Y: ${pitch.toFixed(1)}° • Roll/X: ${roll.toFixed(1)}°`);const dot=document.getElementById('bubbleDot');if(dot){dot.style.left=`calc(50% + ${x}px)`;dot.style.top=`calc(50% + ${y}px)`;}}
+function updateBubble(){
+  const x=clamp(roll*0.9,-28,28);
+  const y=clamp(pitch*0.9,-28,28);
+  setText('xVal',roll.toFixed(1));
+  setText('yVal',pitch.toFixed(1));
+  setText('pitchTelemetry',pitch.toFixed(1)+'°');
+  setText('rollTelemetry',roll.toFixed(1)+'°');
+  setText('arTiltInfo',`Pitch/Y: ${pitch.toFixed(1)}° • Roll/X: ${roll.toFixed(1)}°`);
+  const dot=document.getElementById('bubbleDot');
+  if(dot){dot.style.left=`calc(50% + ${x}px)`;dot.style.top=`calc(50% + ${y}px)`;}
+  const hDot=document.getElementById('hLevelDot');
+  if(hDot){hDot.style.left=`calc(50% + ${clamp(roll*1.0,-36,36)}px)`;}
+  const vDot=document.getElementById('vLevelDot');
+  if(vDot){vDot.style.top=`calc(50% + ${clamp(pitch*1.0,-36,36)}px)`;}
+  const levelOk=Math.abs(roll)<1.5 && Math.abs(pitch)<1.5;
+  setText('bubbleStatus', levelOk?'LEVEL OK':'Tilt active');
+}
 function lockBearing(){lockedBearing=Math.round(heading);alert('Bearing locked: '+lockedBearing+'° '+cardinal(lockedBearing));}
 function captureWaypoint(){if(!gpsAvg){alert('GPS belum terkunci. Tunggu indikator menjadi hijau.');return;}const note=document.getElementById('wpNote').value||'-';waypoints.push({no:waypoints.length+1,lat:gpsAvg.lat,lon:gpsAvg.lon,acc:gpsAvg.acc,alt:gpsAvg.alt,heading:heading,cardinal:cardinal(heading),pitch:pitch,roll:roll,note:note,time:new Date().toLocaleString('id-ID')});renderWaypoints();}
 function renderWaypoints(){const box=document.getElementById('waypointList');if(!waypoints.length){box.innerHTML='<div class="empty">Belum ada waypoint.</div>';return;}box.innerHTML=waypoints.map(w=>`<div class="wp"><b>WP-${w.no} • ${w.cardinal} • ${w.heading.toFixed(1)}°</b><small>${w.lat.toFixed(8)}, ${w.lon.toFixed(8)}<br>Alt: ${w.alt!==null?w.alt.toFixed(1)+' m':'-'} • Acc: ±${w.acc.toFixed(1)} m<br>X/Roll: ${w.roll.toFixed(1)} • Y/Pitch: ${w.pitch.toFixed(1)}<br>Note: ${w.note}<br>${w.time}</small></div>`).join('');}
