@@ -110,7 +110,7 @@ body{margin:0;font-family:Poppins,Arial,sans-serif;background:var(--bg);color:va
         <div class="num" style="left:50%; top:12%;">0</div><div class="num" style="left:72%; top:18%;">30</div><div class="num" style="left:84%; top:34%;">60</div><div class="num" style="left:88%; top:50%;">90</div><div class="num" style="left:84%; top:66%;">120</div><div class="num" style="left:72%; top:82%;">150</div><div class="num" style="left:50%; top:88%;">180</div><div class="num" style="left:28%; top:82%;">210</div><div class="num" style="left:16%; top:66%;">240</div><div class="num" style="left:12%; top:50%;">270</div><div class="num" style="left:16%; top:34%;">300</div><div class="num" style="left:28%; top:18%;">330</div>
         <div class="dir-label n" style="left:50%; top:7%;">N</div><div class="dir-label" style="left:83%; top:50%;">E</div><div class="dir-label" style="left:50%; top:93%;">S</div><div class="dir-label" style="left:17%; top:50%;">W</div>
       </div><div class="compass-readout"><div class="deg" id="normalCenterDegree">0°</div><div class="cardinal" id="normalCenterCardinal">N</div></div></div></div>
-      <div class="btn-row" style="margin-bottom:18px;"><button class="btn btn-mint" onclick="startSensors()">START SENSOR</button><button class="btn btn-purple" onclick="lockBearing()">LOCK BEARING</button></div>
+      <div class="btn-row" style="margin-bottom:10px;"><button class="btn btn-mint" onclick="startSensors()">START SENSOR</button><button class="btn btn-purple" onclick="lockBearing()">LOCK BEARING</button></div><div class="btn-row" style="margin-bottom:18px;"><button class="btn btn-outline" onclick="setNorthCalibration()">SET NORTH / KALIBRASI</button><button class="btn btn-gray" onclick="showCompassCalibrationGuide()">PANDUAN KOMPAS</button></div>
     </div>
     <div id="arCompassView" class="ar-stage">
       <video id="camera" autoplay muted playsinline></video><div class="camera-placeholder" id="cameraPlaceholder"><div><b>AR Compass belum aktif</b><br>Tekan <b>START AR</b>, lalu izinkan Camera, Location, dan Sensor.</div></div>
@@ -1635,7 +1635,7 @@ function swRTab(dir, tab, btn) {
 </div>
 
 <script>
-let compassMode='normal';let heading=0,pitch=0,roll=0,lockedBearing=null;let gpsSamples=[],gpsAvg=null,gpsWatch=null;let cameraReady=false,cameraStream=null,orientReady=false;let waypoints=[],readings=[];
+let compassMode='normal';let heading=0,pitch=0,roll=0,lockedBearing=null;let gpsSamples=[],gpsAvg=null,gpsWatch=null;let cameraReady=false,cameraStream=null,orientReady=false;let waypoints=[],readings=[];let rawHeading=0,lastHeading=null,lastSensorMs=0,sensorSource='WAIT',relativeCompass=false;let compassOffset=parseFloat(localStorage.getItem('fieldToolsCompassOffset')||'0');let absSensor=null;
 function openScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');if(id==='compass'){startGps();startSensors();makeHeadingTape();}if(id==='levelBook'||id==='loopAdjustment'){startGps();}}
 function setCompassMode(mode){compassMode=mode;document.getElementById('normalModeBtn').classList.remove('active');document.getElementById('arModeBtn').classList.remove('active');if(mode==='normal'){document.getElementById('normalCompassView').style.display='block';document.getElementById('arCompassView').classList.remove('active');document.getElementById('normalModeBtn').classList.add('active');}else{document.getElementById('normalCompassView').style.display='none';document.getElementById('arCompassView').classList.add('active');document.getElementById('arModeBtn').classList.add('active');startAR();}}
 function setGpsClass(cls){['gpsDotHome','gpsDotCompass','gpsDotLevel','gpsDotLoop'].forEach(id=>{const el=document.getElementById(id);if(!el)return;el.className='gps-dot '+cls;});}
@@ -1644,8 +1644,105 @@ function averageGps(arr){let lat=0,lon=0,acc=0,alt=0,altCount=0;arr.forEach(p=>{
 function updateGpsUI(){if(!gpsAvg)return;const lat=gpsAvg.lat.toFixed(6);const lon=gpsAvg.lon.toFixed(6);const acc=gpsAvg.acc.toFixed(1);const alt=gpsAvg.alt!==null?gpsAvg.alt.toFixed(1):'-';setText('accText','±'+acc+' m');setText('locationLine',`📍 AVG ${lat}, ${lon} • Alt ${alt} m • Acc ±${acc} m • ${gpsAvg.count} obs`);setText('arGpsInfo',`AVG ${lat}, ${lon} • Alt ${alt} m • Acc ±${acc} m • ${gpsAvg.count} obs`);setText('normalCompassSub',`GPS AVG ${lat}, ${lon}`);setText('arHeadingSub',`GPS AVG ${lat}, ${lon}`);}
 function showGpsInfo(){if(!gpsAvg){alert('GPS belum mendapatkan posisi.\n\nPutih = belum aktif\nKuning = mencari lokasi\nHijau = lokasi terkunci\nMerah = izin lokasi ditolak/error');return;}alert('GPS Location Locked\n\n'+'Latitude  : '+gpsAvg.lat.toFixed(8)+'\n'+'Longitude : '+gpsAvg.lon.toFixed(8)+'\n'+'Accuracy  : ±'+gpsAvg.acc.toFixed(1)+' m\n'+'Altitude  : '+(gpsAvg.alt!==null?gpsAvg.alt.toFixed(1)+' m':'-')+'\n'+'Average   : '+gpsAvg.count+' pengamatan');}
 async function startAR(){startGps();startSensors();if(cameraReady)return;const video=document.getElementById('camera');const placeholder=document.getElementById('cameraPlaceholder');if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){setText('camText','Unsupported');return;}try{cameraStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1280},height:{ideal:720}},audio:false});video.srcObject=cameraStream;cameraReady=true;placeholder.style.display='none';setText('camText','Active');}catch(e){console.log(e);setText('camText','Denied');}}
-function startSensors(){if(orientReady)return;const attach=()=>{window.addEventListener('deviceorientationabsolute',orientationHandler,true);window.addEventListener('deviceorientation',orientationHandler,true);orientReady=true;};if(typeof DeviceOrientationEvent!=='undefined'&&typeof DeviceOrientationEvent.requestPermission==='function'){DeviceOrientationEvent.requestPermission().then(state=>{if(state==='granted')attach();else alert('Izin sensor orientasi ditolak.');}).catch(()=>{alert('Sensor orientasi belum bisa diaktifkan.');});}else{attach();}}
-function orientationHandler(e){let alpha=e.webkitCompassHeading||e.alpha||0;heading=e.webkitCompassHeading?alpha:360-alpha;heading=norm(heading);pitch=e.beta||0;roll=e.gamma||0;updateCompass();updateBubble();}
+function startSensors(){
+  if(orientReady)return;
+  const attachDeviceOrientation=()=>{
+    window.addEventListener('deviceorientationabsolute',orientationHandler,true);
+    window.addEventListener('deviceorientation',orientationHandler,true);
+    orientReady=true;
+    setText('normalCompassSub','Sensor aktif. Gerakkan HP membentuk angka 8 untuk kalibrasi.');
+  };
+  const tryGenericSensor=async()=>{
+    try{
+      if('AbsoluteOrientationSensor' in window){
+        absSensor=new AbsoluteOrientationSensor({frequency:30,referenceFrame:'device'});
+        absSensor.addEventListener('reading',()=>{
+          const q=absSensor.quaternion;
+          if(!q)return;
+          const yaw=quatToYawDeg(q[0],q[1],q[2],q[3]);
+          applyHeading(yaw,'ABS');
+        });
+        absSensor.addEventListener('error',()=>attachDeviceOrientation());
+        absSensor.start();
+        orientReady=true;
+        sensorSource='ABS';
+        setText('normalCompassSub','Sensor absolute aktif. Jika arah tidak tepat, lakukan kalibrasi.');
+        return true;
+      }
+    }catch(err){console.log(err)}
+    return false;
+  };
+  const requestThenStart=async()=>{
+    const ok=await tryGenericSensor();
+    if(!ok)attachDeviceOrientation();
+  };
+  if(typeof DeviceOrientationEvent!=='undefined'&&typeof DeviceOrientationEvent.requestPermission==='function'){
+    DeviceOrientationEvent.requestPermission().then(state=>{if(state==='granted')requestThenStart();else alert('Izin sensor orientasi ditolak.');}).catch(()=>requestThenStart());
+  }else{
+    requestThenStart();
+  }
+}
+function orientationHandler(e){
+  pitch=e.beta||0;
+  roll=e.gamma||0;
+  let h=null;
+  if(typeof e.webkitCompassHeading==='number'){
+    h=e.webkitCompassHeading;
+    sensorSource='IOS';
+    relativeCompass=false;
+  }else if(e.type==='deviceorientationabsolute'||e.absolute===true){
+    h=360-(e.alpha||0);
+    sensorSource='ABS';
+    relativeCompass=false;
+  }else if(e.alpha!==null && e.alpha!==undefined){
+    /* Chrome Android sering memberi alpha relatif, bukan magnetic north. Tetap dipakai, tapi diberi status REL. */
+    h=360-(e.alpha||0);
+    sensorSource='REL';
+    relativeCompass=true;
+  }
+  if(h!==null)applyHeading(h,sensorSource);
+  updateBubble();
+}
+function applyHeading(raw,source){
+  rawHeading=norm(raw);
+  let corrected=norm(rawHeading+compassOffset);
+  const now=performance.now();
+  if(lastHeading===null){
+    heading=corrected;
+  }else{
+    const dt=Math.max(16,now-lastSensorMs);
+    let diff=angleDiff(corrected,lastHeading);
+    /* penahan lonjakan error magnetometer Chrome */
+    if(Math.abs(diff)>130 && dt<450){diff=diff>0?45:-45;}
+    const smooth=relativeCompass?0.10:0.18;
+    heading=norm(lastHeading+diff*smooth);
+  }
+  lastHeading=heading;
+  lastSensorMs=now;
+  const label=source==='REL'?'RELATIVE - perlu kalibrasi':source;
+  setText('normalCompassSub',`Sensor ${label} • offset ${compassOffset.toFixed(0)}°`);
+  updateCompass();
+}
+function angleDiff(target,current){return ((target-current+540)%360)-180;}
+function quatToYawDeg(x,y,z,w){
+  const siny=2*(w*z+x*y);
+  const cosy=1-2*(y*y+z*z);
+  return norm(Math.atan2(siny,cosy)*180/Math.PI);
+}
+function setNorthCalibration(){
+  startSensors();
+  const ok=confirm('Kalibrasi SET NORTH:\n\n1) Arahkan bagian atas HP ke utara sebenarnya / patok acuan.\n2) Jauhkan dari besi, kendaraan, magnet, dan tripod.\n3) Tekan OK untuk menjadikan arah saat ini = 0° Utara.');
+  if(!ok)return;
+  compassOffset=norm(-rawHeading);
+  if(compassOffset>180)compassOffset-=360;
+  localStorage.setItem('fieldToolsCompassOffset',String(compassOffset));
+  lastHeading=null;
+  alert('Kalibrasi tersimpan. Offset kompas: '+compassOffset.toFixed(1)+'°.\nJika masih meleset, lakukan gerakan angka 8 lalu SET NORTH ulang.');
+}
+function clearCompassCalibration(){compassOffset=0;localStorage.removeItem('fieldToolsCompassOffset');lastHeading=null;alert('Offset kompas direset ke 0°.');}
+function showCompassCalibrationGuide(){
+  alert('Panduan memperbaiki kompas error di Chrome Android:\n\n• Buka via HTTPS/GitHub Pages.\n• Izinkan Location dan Motion Sensor.\n• Gerakkan HP membentuk angka 8 sebanyak 5-10 kali.\n• Jauhkan dari besi, magnet, kendaraan, speaker, casing magnet, dan powerbank.\n• Letakkan HP datar 3-5 detik sebelum membaca arah.\n• Jika status RELATIVE, Chrome tidak memberi magnetic north penuh; gunakan tombol SET NORTH / KALIBRASI dengan arah acuan.\n• Untuk kerja proyek, cek silang dengan kompas manual/GNSS/azimuth kontrol.');
+}
 function updateCompass(){const deg=Math.round(heading);const card=cardinal(deg);setText('normalHeadingText',deg+'°');setText('normalCardinalText',card);setText('normalCenterDegree',deg+'°');setText('normalCenterCardinal',card);setText('arHeadingBig',deg+'°');setText('arCardinalBig',card);setText('arCenterHeading',deg+'°');setText('arCenterCardinal',card);setText('headingTelemetry',heading.toFixed(1)+'°');setText('cardinalTelemetry',card);const scale=document.getElementById('normalCompassScale');const numbers=document.getElementById('normalCompassNumbers');if(scale)scale.style.transform=`rotate(${-heading}deg)`;if(numbers)numbers.style.transform=`rotate(${-heading}deg)`;makeHeadingTape();}
 function makeHeadingTape(){const box=document.getElementById('headingTape');if(!box)return;const center=Math.round(heading);let html='';for(let i=-3;i<=3;i++){const d=norm(center+i*15);html+=`<div class="tape-item"><b>${shortCardinal(d)}</b>${Math.round(d)}°</div>`;}box.innerHTML=html;}
 function updateBubble(){const x=clamp(roll*0.8,-28,28);const y=clamp(pitch*0.8,-28,28);setText('xVal',roll.toFixed(1));setText('yVal',pitch.toFixed(1));setText('pitchTelemetry',pitch.toFixed(1)+'°');setText('rollTelemetry',roll.toFixed(1)+'°');setText('arTiltInfo',`Pitch/Y: ${pitch.toFixed(1)}° • Roll/X: ${roll.toFixed(1)}°`);const dot=document.getElementById('bubbleDot');if(dot){dot.style.left=`calc(50% + ${x}px)`;dot.style.top=`calc(50% + ${y}px)`;}}
