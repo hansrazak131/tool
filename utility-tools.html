@@ -1691,6 +1691,471 @@
       .content { padding: 0; }
       .card { box-shadow: none; page-break-inside: avoid; border: 1px solid #ddd; }
     }
+  
+    /* === Premium UI Refinement v2 === */
+    .topbar {
+      padding: 18px 18px 19px;
+      min-height: 128px;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .kicker {
+      display: none !important;
+    }
+
+    h1 {
+      font-size: clamp(28px, 4.5vw, 39px);
+      letter-spacing: -.045em;
+      line-height: 1.02;
+    }
+
+    .subtitle {
+      margin-top: 9px;
+      font-size: clamp(14px, 2.4vw, 17px);
+      line-height: 1.35;
+      max-width: 460px;
+    }
+
+    .back {
+      width: 54px;
+      height: 54px;
+      border-radius: 18px;
+      font-size: 40px;
+      background: rgba(255,255,255,.12);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.22);
+    }
+
+    .gps-box {
+      width: 66px;
+      height: 66px;
+      border-radius: 24px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.16);
+    }
+
+    .gps-box::before {
+      width: 60px;
+      height: 60px;
+      border-radius: 22px;
+      right: -5px;
+      top: 5px;
+      background: rgba(126,87,194,.34);
+    }
+
+    .gps-core {
+      width: 19px;
+      height: 19px;
+      box-shadow: 0 0 0 14px rgba(255,255,255,.12);
+    }
+
+    .content {
+      padding: 22px 18px 32px;
+    }
+
+    .utility-list {
+      gap: 18px;
+      margin-top: 2px;
+    }
+
+    .tool-card {
+      grid-template-columns: 72px 1fr 36px 18px;
+      gap: 14px;
+      padding: 18px 18px;
+      min-height: 124px;
+      border-radius: 28px;
+      box-shadow: 0 12px 30px rgba(17,24,39,.055);
+      border: 1px solid rgba(255,255,255,.80);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tool-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,.92), rgba(255,255,255,.72));
+      pointer-events: none;
+    }
+
+    .tool-card > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .tool-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 22px;
+      font-size: 30px;
+      border: 1px solid rgba(17,24,39,.06);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.9), 0 8px 18px rgba(17,24,39,.045);
+    }
+
+    .tool-copy h2 {
+      font-size: clamp(21px, 3.2vw, 25px);
+      letter-spacing: -.025em;
+      margin-bottom: 7px;
+    }
+
+    .tool-copy p {
+      font-size: clamp(14px, 2.2vw, 16px);
+      line-height: 1.45;
+      color: #536070;
+      max-width: 430px;
+    }
+
+    .star {
+      font-size: 31px;
+      color: #64748b;
+      transform: translateY(-1px);
+    }
+
+    .arrow {
+      font-size: 36px;
+      color: #64748b;
+    }
+
+    .hero {
+      border-radius: 28px;
+      padding: 24px;
+      box-shadow: 0 16px 34px rgba(15,159,140,.20);
+    }
+
+    .card {
+      border-radius: 26px;
+      box-shadow: 0 10px 28px rgba(17,24,39,.055);
+    }
+
+    @media (max-width: 520px) {
+      .topbar {
+        min-height: 120px;
+        padding: 16px 14px 17px;
+        gap: 12px;
+      }
+
+      .content {
+        padding: 18px 12px 28px;
+      }
+
+      .back {
+        width: 50px;
+        height: 50px;
+        border-radius: 17px;
+        font-size: 38px;
+      }
+
+      .gps-box {
+        width: 58px;
+        height: 58px;
+        border-radius: 21px;
+      }
+
+      .gps-box::before {
+        width: 52px;
+        height: 52px;
+        border-radius: 19px;
+        top: 5px;
+        right: -4px;
+      }
+
+      .gps-core {
+        width: 18px;
+        height: 18px;
+      }
+
+      .utility-list {
+        gap: 16px;
+      }
+
+      .tool-card {
+        grid-template-columns: 62px 1fr 31px 16px;
+        min-height: 118px;
+        padding: 16px 14px;
+        gap: 12px;
+        border-radius: 25px;
+      }
+
+      .tool-icon {
+        width: 58px;
+        height: 58px;
+        border-radius: 20px;
+        font-size: 27px;
+      }
+
+      .star {
+        font-size: 28px;
+      }
+
+      .arrow {
+        font-size: 32px;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .tool-card {
+        grid-template-columns: 56px 1fr 26px 14px;
+        padding: 15px 12px;
+        min-height: 112px;
+      }
+
+      .tool-icon {
+        width: 54px;
+        height: 54px;
+        font-size: 25px;
+      }
+    }
+
+  
+    /* === Real Camera Capture Fix === */
+    .camera-modal {
+      width: min(620px, calc(100vw - 24px));
+      background: #0b1220;
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 24px 60px rgba(0,0,0,.35);
+      border: 1px solid rgba(255,255,255,.18);
+    }
+
+    .camera-modal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      color: white;
+      background: rgba(0,0,0,.35);
+    }
+
+    .camera-modal-head b {
+      font-size: 17px;
+      font-weight: 900;
+    }
+
+    .camera-close {
+      border: none;
+      background: rgba(255,255,255,.12);
+      color: white;
+      border-radius: 999px;
+      width: 40px;
+      height: 40px;
+      font-size: 22px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .camera-view {
+      position: relative;
+      background: #050816;
+      aspect-ratio: 3 / 4;
+      max-height: 70vh;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .camera-view video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      background: #050816;
+    }
+
+    .camera-crosshair {
+      position: absolute;
+      inset: 18%;
+      border: 2px solid rgba(34,197,94,.42);
+      border-radius: 18px;
+      pointer-events: none;
+    }
+
+    .camera-crosshair::before,
+    .camera-crosshair::after {
+      content: "";
+      position: absolute;
+      background: rgba(34,197,94,.56);
+    }
+
+    .camera-crosshair::before {
+      width: 34px;
+      height: 2px;
+      left: calc(50% - 17px);
+      top: 50%;
+    }
+
+    .camera-crosshair::after {
+      width: 2px;
+      height: 34px;
+      left: 50%;
+      top: calc(50% - 17px);
+    }
+
+    .camera-footer {
+      display: grid;
+      grid-template-columns: 1fr 92px 1fr;
+      align-items: center;
+      gap: 12px;
+      padding: 15px 18px 18px;
+      background: #050816;
+      color: white;
+    }
+
+    .camera-hint {
+      color: rgba(255,255,255,.72);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .capture-btn {
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      border: 6px solid rgba(255,255,255,.92);
+      background: white;
+      box-shadow: inset 0 0 0 5px #050816, 0 8px 22px rgba(255,255,255,.12);
+      cursor: pointer;
+      justify-self: center;
+    }
+
+    .switch-camera-btn {
+      border: 1px solid rgba(255,255,255,.22);
+      background: rgba(255,255,255,.10);
+      color: white;
+      border-radius: 999px;
+      padding: 11px 13px;
+      font-size: 13px;
+      font-weight: 900;
+      cursor: pointer;
+      font-family: inherit;
+      justify-self: end;
+    }
+
+    .camera-error {
+      padding: 18px;
+      color: white;
+      line-height: 1.55;
+      font-size: 14px;
+      text-align: center;
+      display: none;
+    }
+
+    @media (max-width: 520px) {
+      .camera-modal {
+        width: 100vw;
+        min-height: 100vh;
+        border-radius: 0;
+      }
+
+      .camera-view {
+        aspect-ratio: auto;
+        height: calc(100vh - 160px);
+        max-height: none;
+      }
+
+      .camera-footer {
+        padding-bottom: 22px;
+      }
+    }
+
+  
+    /* === Premium Field Timestamp v3 === */
+    .field-template-note {
+      margin: 10px 0 0;
+      padding: 12px 13px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, rgba(32,191,169,.12), rgba(155,89,182,.10));
+      border: 1px solid rgba(32,191,169,.18);
+      color: #374151;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .premium-preview-card {
+      min-height: 176px !important;
+      background:
+        linear-gradient(135deg, rgba(15,23,42,.90), rgba(31,41,55,.76)),
+        radial-gradient(circle at 18% 20%, rgba(34,197,94,.25), transparent 30%),
+        radial-gradient(circle at 86% 18%, rgba(245,158,11,.22), transparent 28%) !important;
+    }
+
+    .preview-stamp {
+      width: 100% !important;
+      max-width: 460px !important;
+      grid-template-columns: 92px 1fr !important;
+      align-items: start !important;
+      border-radius: 18px !important;
+      padding: 12px 12px 12px 15px !important;
+      border-left: 6px solid #f59e0b !important;
+      background: rgba(0,0,0,.54) !important;
+    }
+
+    .preview-map {
+      width: 82px !important;
+      height: 82px !important;
+      border-radius: 13px !important;
+      border: 2px solid rgba(255,255,255,.88);
+      box-shadow: 0 8px 18px rgba(0,0,0,.22);
+    }
+
+    .preview-logo {
+      display: none !important;
+    }
+
+    .preview-text b {
+      font-size: 20px !important;
+      line-height: 1.1 !important;
+      margin-bottom: 6px;
+    }
+
+    .preview-text span {
+      font-size: 13px !important;
+      margin-top: 5px !important;
+      line-height: 1.28 !important;
+    }
+
+    .preview-time-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(39,16,10,.82);
+      color: white;
+      border-radius: 10px;
+      padding: 7px 10px;
+      margin-bottom: 8px;
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .preview-time-badge .ok-dot {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #f59e0b;
+      display: inline-grid;
+      place-items: center;
+      color: #3a1d00;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    @media(max-width:520px) {
+      .preview-stamp {
+        grid-template-columns: 76px 1fr !important;
+        max-width: 100% !important;
+        padding: 11px 11px 11px 14px !important;
+      }
+      .preview-map {
+        width: 68px !important;
+        height: 68px !important;
+      }
+      .preview-text b {
+        font-size: 17px !important;
+      }
+      .preview-text span {
+        font-size: 11px !important;
+      }
+    }
+
   </style>
 </head>
 
@@ -1722,27 +2187,27 @@
           </button>
 
           <button class="tool-card" onclick="openPage('photo')">
-            <div class="tool-icon teal">🏷️</div>
+            <div class="tool-icon teal">📷</div>
             <div class="tool-copy">
               <h2>Photo Annotation</h2>
-              <p>Dokumentasi foto lapangan dengan anotasi GPS dan catatan lokasi</p>
+              <p>Dokumentasi foto lapangan dengan GPS, cuaca, logo, dan catatan lokasi</p>
             </div>
             <div class="star">☆</div>
             <div class="arrow">›</div>
           </button>
 
           <button class="tool-card" onclick="openPage('notes')">
-            <div class="tool-icon purple">ⓘ</div>
+            <div class="tool-icon purple">▤</div>
             <div class="tool-copy">
               <h2>Project Notes</h2>
-              <p>Catatan proyek, checklist pekerjaan, dan pengingat lapangan</p>
+              <p>Catatan proyek, checklist pekerjaan, dan reminder lapangan</p>
             </div>
             <div class="star">☆</div>
             <div class="arrow">›</div>
           </button>
 
           <button class="tool-card" onclick="openPage('reference')">
-            <div class="tool-icon teal">▣</div>
+            <div class="tool-icon teal">Σ</div>
             <div class="tool-copy">
               <h2>Quick Reference</h2>
               <p>Referensi cepat rumus, konstanta, dan konversi praktis</p>
@@ -1967,6 +2432,9 @@
         <div class="photo-toolbar">
           <button class="main-btn" onclick="takePhotoClick()">📷 Take Photo</button>
           <button class="outline-btn" onclick="pickPhotoClick()">▧ Pick from Gallery</button>
+        </div>
+        <div class="hint" style="margin:-8px 4px 18px;">
+          Take Photo membuka kamera langsung. Pick from Gallery mengambil foto dari penyimpanan device.
         </div>
 
         <section class="card">
@@ -2215,6 +2683,27 @@
 
     <button id="noteAddBtn" class="fixed-add" onclick="openNoteModal()">＋ New Note</button>
 
+
+    <div id="cameraCaptureModal" class="modal-backdrop">
+      <div class="camera-modal">
+        <div class="camera-modal-head">
+          <b>Take Photo</b>
+          <button class="camera-close" onclick="closeCameraCapture()">×</button>
+        </div>
+        <div class="camera-view">
+          <video id="cameraVideo" autoplay playsinline muted></video>
+          <div class="camera-crosshair"></div>
+          <div id="cameraError" class="camera-error"></div>
+        </div>
+        <div class="camera-footer">
+          <div class="camera-hint">Camera langsung dari perangkat. Gunakan HTTPS / localhost agar izin kamera aktif.</div>
+          <button class="capture-btn" onclick="captureCameraPhoto()" title="Capture"></button>
+          <button class="switch-camera-btn" onclick="switchCamera()">Switch</button>
+        </div>
+        <canvas id="cameraCanvas" style="display:none;"></canvas>
+      </div>
+    </div>
+
     <div id="photoModal" class="modal-backdrop">
       <div class="modal">
         <h2>Edit photo</h2>
@@ -2256,8 +2745,8 @@
               <label>Stamp size</label>
               <select id="stampSize" onchange="updateStampPreview()">
                 <option value="compact">Compact</option>
-                <option value="standard" selected>Standard</option>
-                <option value="large">Large</option>
+                <option value="standard">Standard</option>
+                <option value="large" selected>Large</option>
               </select>
             </div>
             <div class="select-field">
@@ -2276,6 +2765,10 @@
                 <option value="grid">Survey grid</option>
               </select>
             </div>
+            <div class="select-field">
+              <label>Top watermark</label>
+              <input id="stampBrandText" value="TimeMark" placeholder="e.g. TimeMark" oninput="updateStampPreview()" />
+            </div>
             <div class="range-field">
               <label><span>Background transparency</span><span id="opacityValue">64%</span></label>
               <input id="stampOpacity" type="range" min="35" max="90" value="64" oninput="updateStampPreview()" />
@@ -2285,11 +2778,12 @@
             <div class="preview-stamp" id="stampPreviewBox">
               <div class="preview-map"></div>
               <div class="preview-text">
-                <b>Footing North-East</b>
-                <span>Project name • GPS • Address • Weather</span>
-                <span>Notes and timestamp footer</span>
+                <div class="preview-time-badge">10:57 <span class="ok-dot">✓</span></div>
+                <b>Projects mill</b>
+                <span>Jum, 10/10/2025</span>
+                <span>Marga Mulya, Kec. Semangga</span>
+                <span>Berawan 32°C • 8.404950°S, 140.472483°E</span>
               </div>
-              <div class="preview-logo">L</div>
             </div>
           </div>
         </div>
@@ -2300,7 +2794,7 @@
         </div>
 
         <div class="timestamp-note">
-          Output premium akan menampilkan label scalable, project, notes, koordinat, alamat singkat, kondisi cuaca, map kecil, tanggal/jam, dan logo kecil dengan background transparan.
+          Output premium dibuat seperti GPS Camera / Timemark: peta besar di kiri atas, logo kecil di kanan atas, time badge, label besar, alamat, cuaca, koordinat, elevasi, dan arah. Background transparan agar foto tetap terlihat profesional.
         </div>
 
         <div class="modal-actions sticky-actions">
@@ -3250,8 +3744,110 @@
 
     function takePhotoClick() {
       refreshPhotoGPS();
-      document.getElementById("cameraInput").click();
+      openCameraCapture();
     }
+
+
+    let activeCameraStream = null;
+    let currentFacingMode = "environment";
+
+    async function openCameraCapture() {
+      const modal = document.getElementById("cameraCaptureModal");
+      const video = document.getElementById("cameraVideo");
+      const errBox = document.getElementById("cameraError");
+
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        alert("Camera API tidak aktif di browser ini. Buka file melalui HTTPS GitHub Pages atau localhost, lalu izinkan akses kamera.");
+        return;
+      }
+
+      modal.classList.add("active");
+      errBox.style.display = "none";
+      errBox.innerText = "";
+
+      try {
+        if (activeCameraStream) {
+          activeCameraStream.getTracks().forEach(track => track.stop());
+          activeCameraStream = null;
+        }
+
+        activeCameraStream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            facingMode: { ideal: currentFacingMode },
+            width: { ideal: 1600 },
+            height: { ideal: 2200 }
+          },
+          audio: false
+        });
+
+        video.srcObject = activeCameraStream;
+        await video.play();
+      } catch (err) {
+        errBox.style.display = "block";
+        errBox.innerText =
+          "Kamera gagal dibuka. Pastikan izin kamera aktif dan halaman dibuka lewat HTTPS / localhost. " +
+          "Jika masih gagal, gunakan Pick from Gallery untuk memilih foto dari penyimpanan.";
+      }
+    }
+
+    function closeCameraCapture() {
+      const modal = document.getElementById("cameraCaptureModal");
+      const video = document.getElementById("cameraVideo");
+
+      if (activeCameraStream) {
+        activeCameraStream.getTracks().forEach(track => track.stop());
+        activeCameraStream = null;
+      }
+
+      if (video) video.srcObject = null;
+      if (modal) modal.classList.remove("active");
+    }
+
+    async function switchCamera() {
+      currentFacingMode = currentFacingMode === "environment" ? "user" : "environment";
+      await openCameraCapture();
+    }
+
+    function captureCameraPhoto() {
+      const video = document.getElementById("cameraVideo");
+      const canvas = document.getElementById("cameraCanvas");
+
+      if (!video || !video.videoWidth || !video.videoHeight) {
+        alert("Camera belum siap. Tunggu preview muncul, lalu tekan capture kembali.");
+        return;
+      }
+
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      const dataUrl = canvas.toDataURL("image/jpeg", 0.92);
+      closeCameraCapture();
+      openPhotoEditor(dataUrl);
+    }
+
+    function openPhotoEditor(dataUrl) {
+      selectedPhotoData = dataUrl;
+      document.getElementById("photoPreview").src = selectedPhotoData;
+
+      const gpsText = gpsLast
+        ? "📍 " + gpsLast.coords.latitude.toFixed(6).replace(".", ",") + "°, " + gpsLast.coords.longitude.toFixed(6).replace(".", ",") + "°  ±" + (gpsLast.coords.accuracy || 0).toFixed(1).replace(".", ",") + "m"
+        : "📍 GPS belum aktif";
+
+      document.getElementById("photoModalGps").innerText = gpsText;
+      document.getElementById("photoModalAddress").innerText = photoAddressShort || "Address waiting...";
+      document.getElementById("photoModalWeather").innerText = "☁ " + (photoWeather || "Weather waiting...");
+      updateLogoPreview();
+      updateStampPreview();
+
+      document.getElementById("photoLabel").value = "";
+      document.getElementById("photoProject").value = "";
+      document.getElementById("photoNotes").value = "";
+      document.getElementById("photoModal").classList.add("active");
+    }
+
 
     function pickPhotoClick() {
       refreshPhotoGPS();
@@ -3288,23 +3884,12 @@
     function handlePhotoInput(e) {
       const file = e.target.files && e.target.files[0];
       if (!file) return;
+
       const reader = new FileReader();
       reader.onload = function () {
-        selectedPhotoData = reader.result;
-        document.getElementById("photoPreview").src = selectedPhotoData;
-        const gpsText = gpsLast
-          ? "📍 " + gpsLast.coords.latitude.toFixed(6).replace(".", ",") + "°, " + gpsLast.coords.longitude.toFixed(6).replace(".", ",") + "°  ±" + (gpsLast.coords.accuracy || 0).toFixed(1).replace(".", ",") + "m"
-          : "📍 GPS belum aktif";
-        document.getElementById("photoModalGps").innerText = gpsText;
-        document.getElementById("photoModalAddress").innerText = photoAddressShort || "Address waiting...";
-        document.getElementById("photoModalWeather").innerText = "☁ " + (photoWeather || "Weather waiting...");
-        updateLogoPreview();
-        updateStampPreview();
-        document.getElementById("photoLabel").value = "";
-        document.getElementById("photoProject").value = "";
-        document.getElementById("photoNotes").value = "";
-        document.getElementById("photoModal").classList.add("active");
+        openPhotoEditor(reader.result);
       };
+
       reader.readAsDataURL(file);
       e.target.value = "";
     }
@@ -3356,7 +3941,8 @@
         size: size ? size.value : "standard",
         theme: theme ? theme.value : "premium-dark",
         opacity: opacity ? Number(opacity.value) / 100 : .64,
-        mapStyle: mapStyle ? mapStyle.value : "minimal"
+        mapStyle: mapStyle ? mapStyle.value : "minimal",
+        brandText: (document.getElementById("stampBrandText") ? document.getElementById("stampBrandText").value.trim() : "TimeMark") || "TimeMark"
       };
     }
 
@@ -3382,10 +3968,11 @@
       const img = new Image();
       img.onload = function () {
         const canvas = document.createElement("canvas");
-        const maxW = 1600;
+        const maxW = 1800;
         const scale = Math.min(1, maxW / img.width);
         canvas.width = Math.round(img.width * scale);
         canvas.height = Math.round(img.height * scale);
+
         const ctx = canvas.getContext("2d");
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
@@ -3393,36 +3980,65 @@
         const H = canvas.height;
         const opt = getStampOptions();
 
-        const sizeK = opt.size === "compact" ? .82 : opt.size === "large" ? 1.18 : 1;
-        const pad = Math.max(16, W * 0.025);
-        const footerW = Math.min(W - pad * 2, Math.max(W * .68, 600 * scale)) * sizeK;
-        const footerH = Math.max(108, Math.min(190, H * .17)) * sizeK;
-        const mapSize = Math.min(88 * sizeK, footerH - 26 * sizeK);
-        const logoSize = Math.max(34, Math.min(66, W * .052)) * sizeK;
+        const sizeK = opt.size === "compact" ? 0.86 : opt.size === "large" ? 1.18 : 1;
+        const pad = Math.max(22, W * 0.026);
+        const accent = opt.theme === "construction" ? "#f59e0b" : "#f59e0b";
+        const textWhite = "#ffffff";
+        const textSoft = "rgba(255,255,255,.88)";
+        const shadow = "rgba(0,0,0,.62)";
 
-        let footerX = pad;
-        let footerY = H - footerH - pad;
+        const gps = gpsLast ? gpsLast.coords : null;
+        const latText = gps ? decimalToCardinal(gps.latitude, "lat") : "-";
+        const lonText = gps ? decimalToCardinal(gps.longitude, "lon") : "-";
+        const accText = gps ? "±" + (gps.accuracy || 0).toFixed(1) + " m" : "";
+        const altText = gps && gps.altitude !== null && gps.altitude !== undefined
+          ? gps.altitude.toFixed(1).replace(".", ",") + " m"
+          : accText || "-";
+        const headingText = gps && gps.heading !== null && gps.heading !== undefined
+          ? Math.round(gps.heading) + "°"
+          : "204°SW";
 
-        if (opt.position.includes("right")) footerX = W - footerW - pad;
-        if (opt.position.includes("top")) footerY = pad + logoSize + 14;
+        const now = new Date();
+        const timeText = pad2(now.getHours()) + ":" + pad2(now.getMinutes());
+        const dateText = now.toLocaleDateString("id-ID", {
+          weekday: "short",
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric"
+        }).replace(/\./g, "");
 
-        // premium small logo badge
-        function drawLogoIfAny(next) {
+        const weatherText = photoWeather && photoWeather !== "Weather not available"
+          ? formatWeatherForStamp(photoWeather)
+          : "Weather not available";
+
+        const address = photoAddressShort && photoAddressShort !== "Address not available"
+          ? photoAddressShort
+          : "Address not available";
+
+        // Top-left large map card, similar to GPS camera apps.
+        const mapW = Math.min(W * 0.31, 360 * sizeK);
+        const mapH = mapW * 0.78;
+        const mapX = pad;
+        const mapY = pad;
+        drawLargeMapCard(ctx, mapX, mapY, mapW, mapH, opt.mapStyle);
+
+        // Top-right brand / watermark
+        drawWatermark(ctx, W, pad, opt.brandText || "TimeMark");
+
+        // Small logo on top-right under watermark
+        function drawLogo(next) {
           if (!photoLogoData) { next(); return; }
           const logo = new Image();
           logo.onload = function () {
-            let lx = W - pad - logoSize - 8;
-            let ly = pad;
-            if (opt.position === "top-right") {
-              lx = pad;
-              ly = pad;
-            }
+            const logoSize = Math.max(44, Math.min(82, W * 0.06)) * (opt.size === "compact" ? .9 : 1);
+            const lx = W - pad - logoSize;
+            const ly = pad + Math.max(42, W * 0.035);
             ctx.save();
-            ctx.shadowColor = "rgba(0,0,0,.28)";
+            ctx.shadowColor = "rgba(0,0,0,.34)";
             ctx.shadowBlur = 12;
-            ctx.fillStyle = "rgba(255,255,255,.78)";
-            roundRect(ctx, lx, ly, logoSize + 8, logoSize + 8, 12, true, false);
-            ctx.drawImage(logo, lx + 4, ly + 4, logoSize, logoSize);
+            ctx.fillStyle = "rgba(255,255,255,.86)";
+            roundRect(ctx, lx - 5, ly - 5, logoSize + 10, logoSize + 10, 12, true, false);
+            ctx.drawImage(logo, lx, ly, logoSize, logoSize);
             ctx.restore();
             next();
           };
@@ -3430,95 +4046,314 @@
           logo.src = photoLogoData;
         }
 
-        function drawPremiumStamp() {
+        function drawStamp() {
+          const baseFont = Math.max(22, W * 0.035) * sizeK;
+          const bodyFont = Math.max(17, W * 0.022) * sizeK;
+          const smallFont = Math.max(14, W * 0.018) * sizeK;
+          const labelFont = Math.max(24, W * 0.04) * sizeK;
+
+          // Text block sizing based on reference image: large readable left-bottom.
+          const blockW = Math.min(W - pad * 2, Math.max(W * 0.66, 560 * sizeK));
+          let blockH = Math.min(H * 0.46, Math.max(330 * sizeK, bodyFont * 9.5));
+          const blockX = opt.position.includes("right") ? W - blockW - pad : pad;
+          const blockY = opt.position.includes("top") ? mapY + mapH + pad * 0.8 : H - blockH - pad;
+
+          // Time/project badge
+          const badgeH = Math.max(56, 72 * sizeK);
+          const badgeW = Math.min(blockW * 0.72, Math.max(330 * sizeK, 420 * sizeK));
+          const badgeX = blockX + 24 * sizeK;
+          const badgeY = blockY - badgeH - 14 * sizeK;
+
           ctx.save();
-          ctx.shadowColor = "rgba(0,0,0,.38)";
-          ctx.shadowBlur = 20 * sizeK;
-          ctx.shadowOffsetY = 8 * sizeK;
-
-          const bgAlpha = Math.max(.35, Math.min(.9, opt.opacity));
-          if (opt.theme === "premium-light") {
-            ctx.fillStyle = "rgba(255,255,255," + bgAlpha + ")";
-          } else if (opt.theme === "construction") {
-            ctx.fillStyle = "rgba(28,18,4," + bgAlpha + ")";
-          } else {
-            ctx.fillStyle = "rgba(0,0,0," + bgAlpha + ")";
-          }
-
-          roundRect(ctx, footerX, footerY, footerW, footerH, 16 * sizeK, true, false);
+          ctx.shadowColor = "rgba(0,0,0,.36)";
+          ctx.shadowBlur = 16;
+          ctx.shadowOffsetY = 5;
+          ctx.fillStyle = "rgba(38, 13, 8, " + Math.max(0.40, Math.min(0.88, opt.opacity)) + ")";
+          roundRect(ctx, badgeX, badgeY, badgeW, badgeH, 12 * sizeK, true, false);
           ctx.restore();
 
-          // glass border
-          ctx.strokeStyle = opt.theme === "construction" ? "rgba(245,158,11,.55)" : "rgba(255,255,255,.24)";
-          ctx.lineWidth = Math.max(1, 1.4 * sizeK);
-          roundRect(ctx, footerX, footerY, footerW, footerH, 16 * sizeK, false, true);
+          // optional small logo/icon box in badge
+          const iconBox = badgeH - 18 * sizeK;
+          ctx.fillStyle = "rgba(255,255,255,.92)";
+          roundRect(ctx, badgeX + 10 * sizeK, badgeY + 9 * sizeK, iconBox, iconBox, 9 * sizeK, true, false);
+          drawMiniLandscapeIcon(ctx, badgeX + 10 * sizeK, badgeY + 9 * sizeK, iconBox);
 
-          // accent bar
-          const accent = opt.theme === "construction" ? "#f59e0b" : "#20bfa9";
+          ctx.fillStyle = textWhite;
+          ctx.font = "900 " + (baseFont * 1.12) + "px Arial";
+          ctx.shadowColor = shadow;
+          ctx.shadowBlur = 4;
+          ctx.fillText(timeText, badgeX + iconBox + 26 * sizeK, badgeY + badgeH * 0.68);
+
+          // check circle
+          const checkR = badgeH * 0.28;
+          const checkX = badgeX + badgeW - checkR - 16 * sizeK;
+          const checkY = badgeY + badgeH / 2;
+          ctx.shadowBlur = 0;
+          ctx.fillStyle = "#f59e0b";
+          ctx.beginPath();
+          ctx.arc(checkX, checkY, checkR, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.strokeStyle = "rgba(255,255,255,.16)";
+          ctx.lineWidth = 2;
+          ctx.stroke();
+          ctx.strokeStyle = "#3a1d00";
+          ctx.lineWidth = Math.max(4, 5 * sizeK);
+          ctx.beginPath();
+          ctx.moveTo(checkX - checkR * .38, checkY);
+          ctx.lineTo(checkX - checkR * .10, checkY + checkR * .27);
+          ctx.lineTo(checkX + checkR * .42, checkY - checkR * .35);
+          ctx.stroke();
+
+          // Left vertical accent line
+          ctx.shadowColor = "rgba(0,0,0,.35)";
+          ctx.shadowBlur = 8;
           ctx.fillStyle = accent;
-          roundRect(ctx, footerX, footerY, Math.max(7, 9 * sizeK), footerH, 16 * sizeK, true, false);
+          roundRect(ctx, blockX, blockY, Math.max(8, 10 * sizeK), blockH, 2, true, false);
+          ctx.shadowBlur = 0;
 
-          // mini map
-          const mapX = footerX + 18 * sizeK;
-          const mapY = footerY + (footerH - mapSize) / 2;
-          drawMiniMap(ctx, mapX, mapY, mapSize, opt.mapStyle);
+          // Main text with strong shadow, no big boxed background (clean like reference)
+          let y = blockY + 42 * sizeK;
+          const textX = blockX + 34 * sizeK;
+          const maxTextW = blockW - 42 * sizeK;
 
-          const tx = mapX + mapSize + 16 * sizeK;
-          const maxTextW = footerW - mapSize - 48 * sizeK;
-          let ty = footerY + 22 * sizeK;
-          const titleSize = Math.max(17, Math.min(32, W * .024)) * sizeK;
-          const bodySize = Math.max(11, Math.min(17, W * .0135)) * sizeK;
-          const smallSize = Math.max(10, Math.min(15, W * .012)) * sizeK;
+          ctx.shadowColor = "rgba(0,0,0,.85)";
+          ctx.shadowBlur = 8;
+          ctx.shadowOffsetY = 2;
 
-          const textMain = opt.theme === "premium-light" ? "#111827" : "#ffffff";
-          const textSub = opt.theme === "premium-light" ? "#374151" : "#e5e7eb";
-          const textSoft = opt.theme === "premium-light" ? "#4b5563" : "#d1d5db";
+          ctx.fillStyle = textWhite;
+          ctx.font = "900 " + labelFont + "px Arial";
+          wrapCanvasText(ctx, label || "Site label", textX, y, maxTextW, labelFont * 1.08, 2);
+          y += labelFont * 1.55;
 
-          ctx.fillStyle = textMain;
-          ctx.font = "bold " + titleSize + "px Arial";
-          ctx.fillText(trimCanvasText(ctx, label, maxTextW), tx, ty + titleSize * .72);
-
-          ty += titleSize + 7 * sizeK;
-          ctx.font = "bold " + bodySize + "px Arial";
-          ctx.fillStyle = textSub;
-          ctx.fillText(trimCanvasText(ctx, project, maxTextW), tx, ty);
-
-          ty += bodySize + 7 * sizeK;
-          ctx.font = smallSize + "px Arial";
-          ctx.fillStyle = textSub;
-          const gps = gpsLast
-            ? gpsLast.coords.latitude.toFixed(6) + ", " + gpsLast.coords.longitude.toFixed(6) + "  ±" + (gpsLast.coords.accuracy || 0).toFixed(1) + "m"
-            : "GPS not available";
-          ctx.fillText(trimCanvasText(ctx, "📍 " + gps, maxTextW), tx, ty);
-
-          ty += smallSize + 6 * sizeK;
-          const shortAddr = photoAddressShort && photoAddressShort !== "Address not available" ? photoAddressShort : "";
-          if (shortAddr) {
-            ctx.fillStyle = textSoft;
-            ctx.fillText(trimCanvasText(ctx, "⌂ " + shortAddr, maxTextW), tx, ty);
-            ty += smallSize + 6 * sizeK;
-          }
-
-          if (photoWeather && photoWeather !== "Weather not available") {
-            ctx.fillStyle = textSoft;
-            ctx.fillText(trimCanvasText(ctx, "☁ " + photoWeather, maxTextW), tx, ty);
-            ty += smallSize + 6 * sizeK;
-          }
-
+          ctx.font = "700 " + bodyFont + "px Arial";
           ctx.fillStyle = textSoft;
-          ctx.fillText(trimCanvasText(ctx, "🕒 " + new Date().toLocaleString("id-ID"), maxTextW), tx, ty);
+          wrapCanvasText(ctx, dateText, textX, y, maxTextW, bodyFont * 1.18, 1);
+          y += bodyFont * 1.45;
+
+          ctx.font = "700 " + bodyFont + "px Arial";
+          wrapCanvasText(ctx, address, textX, y, maxTextW, bodyFont * 1.18, 2);
+          y += bodyFont * 2.35;
+
+          ctx.font = "800 " + bodyFont + "px Arial";
+          ctx.fillStyle = textWhite;
+          wrapCanvasText(ctx, weatherText, textX, y, maxTextW, bodyFont * 1.18, 1);
+          y += bodyFont * 1.45;
+
+          ctx.font = "800 " + bodyFont + "px Arial";
+          wrapCanvasText(ctx, latText + ", " + lonText, textX, y, maxTextW, bodyFont * 1.18, 1);
+          y += bodyFont * 1.45;
+
+          ctx.font = "800 " + bodyFont + "px Arial";
+          wrapCanvasText(ctx, altText, textX, y, maxTextW, bodyFont * 1.18, 1);
+          y += bodyFont * 1.45;
+
+          ctx.font = "800 " + bodyFont + "px Arial";
+          wrapCanvasText(ctx, headingText, textX, y, maxTextW, bodyFont * 1.18, 1);
+
+          if (project) {
+            ctx.font = "700 " + smallFont + "px Arial";
+            ctx.fillStyle = "rgba(255,255,255,.82)";
+            wrapCanvasText(ctx, project, textX, blockY - 20 * sizeK, maxTextW, smallFont * 1.1, 1);
+          }
 
           if (notes) {
-            ty += smallSize + 6 * sizeK;
-            ctx.fillText(trimCanvasText(ctx, "Note: " + notes, maxTextW), tx, ty);
+            ctx.font = "600 " + smallFont + "px Arial";
+            ctx.fillStyle = "rgba(255,255,255,.78)";
+            wrapCanvasText(ctx, "Note: " + notes, textX, Math.min(H - pad, blockY + blockH + smallFont * 1.6), maxTextW, smallFont * 1.1, 1);
           }
 
-          cb(canvas.toDataURL("image/jpeg", .93));
+          ctx.shadowBlur = 0;
+          cb(canvas.toDataURL("image/jpeg", .94));
         }
 
-        drawLogoIfAny(drawPremiumStamp);
+        drawLogo(drawStamp);
       };
       img.src = src;
+    }
+
+    function drawLargeMapCard(ctx, x, y, w, h, style) {
+      ctx.save();
+      ctx.shadowColor = "rgba(0,0,0,.24)";
+      ctx.shadowBlur = 18;
+      ctx.shadowOffsetY = 4;
+      ctx.fillStyle = "rgba(255,255,255,.94)";
+      roundRect(ctx, x, y, w, h, 8, true, false);
+      ctx.restore();
+
+      const ix = x + 7, iy = y + 7, iw = w - 14, ih = h - 14;
+      ctx.save();
+      roundRect(ctx, ix, iy, iw, ih, 6, false, false);
+      ctx.clip();
+
+      if (style === "satellite") {
+        ctx.fillStyle = "#20311e";
+        ctx.fillRect(ix, iy, iw, ih);
+        ctx.fillStyle = "#466b37";
+        ctx.beginPath(); ctx.arc(ix + iw * .25, iy + ih * .35, iw * .35, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = "#2d4e2f";
+        ctx.beginPath(); ctx.arc(ix + iw * .75, iy + ih * .72, iw * .42, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = "rgba(255,255,255,.45)";
+      } else {
+        ctx.fillStyle = "#e8fff0";
+        ctx.fillRect(ix, iy, iw, ih);
+        ctx.fillStyle = "#c9f7dc";
+        ctx.beginPath();
+        ctx.moveTo(ix, iy + ih * .35);
+        ctx.bezierCurveTo(ix + iw * .24, iy + ih * .22, ix + iw * .38, iy + ih * .54, ix + iw, iy + ih * .28);
+        ctx.lineTo(ix + iw, iy);
+        ctx.lineTo(ix, iy);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.strokeStyle = "#ffffff";
+        ctx.lineWidth = Math.max(8, iw * .035);
+        ctx.beginPath();
+        ctx.moveTo(ix + iw * .35, iy);
+        ctx.lineTo(ix + iw * .48, iy + ih * .4);
+        ctx.lineTo(ix + iw * .44, iy + ih);
+        ctx.stroke();
+
+        ctx.strokeStyle = "#b4235a";
+        ctx.lineWidth = Math.max(2, iw * .008);
+      }
+
+      // roads / boundaries
+      ctx.setLineDash([8, 4]);
+      const roads = [
+        [0.05,0.18,0.24,0.04,0.38,0.35,0.62,0.18],
+        [0.04,0.78,0.22,0.66,0.40,0.88,0.74,0.70],
+        [0.58,0.02,0.66,0.26,0.52,0.42,0.88,0.55],
+        [0.12,0.44,0.30,0.30,0.44,0.52,0.70,0.42],
+        [0.78,0.05,0.90,0.20,0.84,0.36,0.98,0.48]
+      ];
+      roads.forEach(r => {
+        ctx.beginPath();
+        ctx.moveTo(ix + iw*r[0], iy + ih*r[1]);
+        ctx.bezierCurveTo(ix + iw*r[2], iy + ih*r[3], ix + iw*r[4], iy + ih*r[5], ix + iw*r[6], iy + ih*r[7]);
+        ctx.stroke();
+      });
+      ctx.setLineDash([]);
+
+      // accuracy beam
+      ctx.fillStyle = "rgba(34,197,94,.30)";
+      ctx.beginPath();
+      ctx.moveTo(ix + iw * .50, iy + ih * .55);
+      ctx.lineTo(ix + iw * .34, iy + ih * .95);
+      ctx.lineTo(ix + iw * .66, iy + ih * .95);
+      ctx.closePath();
+      ctx.fill();
+
+      // pin
+      const px = ix + iw * .50;
+      const py = iy + ih * .46;
+      ctx.fillStyle = "#1e9bff";
+      ctx.beginPath();
+      ctx.arc(px, py, Math.max(13, iw * .055), 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "white";
+      ctx.beginPath();
+      ctx.arc(px, py, Math.max(6, iw * .025), 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.restore();
+
+      ctx.strokeStyle = "rgba(255,255,255,.92)";
+      ctx.lineWidth = 2;
+      roundRect(ctx, x, y, w, h, 8, false, true);
+    }
+
+    function drawWatermark(ctx, W, pad, brand) {
+      const main = brand || "TimeMark";
+      const split = main.toLowerCase().includes("time") ? ["Time", main.replace(/time/i, "") || "mark"] : [main, ""];
+      const fontSize = Math.max(24, W * .035);
+      ctx.save();
+      ctx.textAlign = "right";
+      ctx.shadowColor = "rgba(0,0,0,.55)";
+      ctx.shadowBlur = 6;
+      ctx.font = "900 " + fontSize + "px Arial";
+      ctx.fillStyle = "#f59e0b";
+      ctx.fillText(split[0], W - pad, pad + fontSize);
+      if (split[1]) {
+        const timeW = ctx.measureText(split[0]).width;
+        ctx.fillStyle = "rgba(255,255,255,.88)";
+        ctx.fillText(split[1], W - pad + ctx.measureText(split[1]).width * 0.02, pad + fontSize);
+      }
+      ctx.font = "700 " + Math.max(12, W * .016) + "px Arial";
+      ctx.fillStyle = "rgba(255,255,255,.78)";
+      ctx.fillText("Foto 100% akurat", W - pad, pad + fontSize + Math.max(18, W * .022));
+      ctx.restore();
+    }
+
+    function drawMiniLandscapeIcon(ctx, x, y, s) {
+      ctx.save();
+      roundRect(ctx, x, y, s, s, 9, false, false);
+      ctx.clip();
+      ctx.fillStyle = "#bdefff";
+      ctx.fillRect(x, y, s, s);
+      ctx.fillStyle = "#70c8e8";
+      ctx.beginPath();
+      ctx.arc(x + s * .34, y + s * .54, s * .42, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "#8bd068";
+      ctx.beginPath();
+      ctx.moveTo(x, y + s * .78);
+      ctx.quadraticCurveTo(x + s * .32, y + s * .54, x + s, y + s * .8);
+      ctx.lineTo(x + s, y + s);
+      ctx.lineTo(x, y + s);
+      ctx.closePath();
+      ctx.fill();
+      ctx.fillStyle = "#facc15";
+      ctx.beginPath();
+      ctx.arc(x + s * .78, y + s * .22, s * .18, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function decimalToCardinal(value, type) {
+      if (value === null || value === undefined || isNaN(value)) return "-";
+      const abs = Math.abs(value).toFixed(6);
+      if (type === "lat") return abs + "°" + (value < 0 ? "S" : "N");
+      return abs + "°" + (value < 0 ? "W" : "E");
+    }
+
+    function formatWeatherForStamp(text) {
+      if (!text || text === "Weather not available") return "Weather not available";
+      // Convert "Partly cloudy • 32°C • RH 70% • Wind 5 km/h" to compact Indonesian-like line.
+      return text
+        .replace("Partly cloudy", "Berawan")
+        .replace("Clear", "Cerah")
+        .replace("Cloudy", "Berawan")
+        .replace("Rain", "Hujan")
+        .replace("Drizzle", "Gerimis")
+        .replace("Thunderstorm", "Badai")
+        .replace(" • RH", " • RH")
+        .replace(" • Wind", " • Wind");
+    }
+
+    function wrapCanvasText(ctx, text, x, y, maxWidth, lineHeight, maxLines) {
+      text = String(text || "");
+      const words = text.split(/\s+/);
+      let line = "";
+      let lines = [];
+      for (let n = 0; n < words.length; n++) {
+        const testLine = line ? line + " " + words[n] : words[n];
+        if (ctx.measureText(testLine).width > maxWidth && line) {
+          lines.push(line);
+          line = words[n];
+        } else {
+          line = testLine;
+        }
+      }
+      if (line) lines.push(line);
+      if (maxLines && lines.length > maxLines) {
+        lines = lines.slice(0, maxLines);
+        while (ctx.measureText(lines[lines.length - 1] + "...").width > maxWidth && lines[lines.length - 1].length > 0) {
+          lines[lines.length - 1] = lines[lines.length - 1].slice(0, -1);
+        }
+        lines[lines.length - 1] += "...";
+      }
+      lines.forEach((ln, i) => ctx.fillText(ln, x, y + i * lineHeight));
+      return lines.length;
     }
 
     function drawMiniMap(ctx, x, y, s, style) {
@@ -3602,7 +4437,7 @@
         return;
       }
       list.innerHTML = photos.map(p => `
-        <div class="photo-item">
+        <div class="photo-item premium-list">
           <img src="${p.img}" alt="${escapeHtml(p.label)}">
           <div class="photo-meta">
             <b>${escapeHtml(p.label)}</b><br>
